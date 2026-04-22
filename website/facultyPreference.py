@@ -2,9 +2,8 @@ import pandas as pd
 import os
 from flask import Blueprint, render_template, jsonify, request
 
-# =========================
-# PATH
-# =========================
+MAX_OVERLOAD = 1.25
+
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
@@ -19,16 +18,16 @@ def load_data():
 
     faculty["department"] = faculty["dept_id"].astype(str).str.upper()
     faculty["max_hours"] = faculty.get("max_hours_per_week", 34)
+
     faculty["current_hours"] = 0
     faculty["unique_subjects"] = [set() for _ in range(len(faculty))]
 
-    # preferences
-    if "subject_preferences" in faculty.columns:
-        faculty["preferences"] = faculty["subject_preferences"].fillna("").apply(
-            lambda x: set(str(x).split(";"))
-        )
-    else:
-        faculty["preferences"] = [set() for _ in range(len(faculty))]
+    faculty["theory_count"] = 0
+    faculty["practical_count"] = 0
+
+    faculty["preferences"] = faculty["subject_preferences"].fillna("").apply(
+        lambda x: set(str(x).split(";"))
+    )
 
     subjects = pd.read_csv(os.path.join(DATA_DIR, "subjects.csv"))
     subjects.columns = subjects.columns.str.strip().str.lower()
@@ -57,11 +56,10 @@ def get_hours(sub):
 
 
 # =========================
-# BUILD TASKS (SEM FILTERED)
+# TASK BUILDING
 # =========================
 def build_tasks(sem_type):
     faculty_list, subject_dict, course_map, divisions = load_data()
-
     tasks = []
 
     for _, div in divisions.iterrows():
@@ -75,7 +73,6 @@ def build_tasks(sem_type):
             sem = int(row["semester"])
             course = str(row["course_id"]).upper()
 
-            # 🔥 SEM FILTER HERE (IMPORTANT FIX)
             if sem_type == "odd":
                 if sem not in [1, 3, 5, 7]:
                     continue
@@ -96,26 +93,23 @@ def build_tasks(sem_type):
                 "subject_id": sub["subject_id"],
                 "subject_name": sub["name"],
                 "department": sub["department"],
-                "type": sub["type"],
+                "type": sub["type"].lower(),
                 "credits": sub["credits"],
                 "hours": get_hours(sub)
             })
 
-    print(f"TOTAL TASKS ({sem_type}):", len(tasks))
     return tasks, faculty_list
 
 
 # =========================
 # ASSIGNMENT ENGINE
 # =========================
-def generate_assignments(sem_type):
+def generate_assignments(sem_type="odd"):
     tasks, faculty_list = build_tasks(sem_type)
-
     assignments = []
-    subject_anchor = {}
 
-    def can_assign(fac, hours):
-        return fac["current_hours"] + hours <= fac["max_hours"] + 2
+    def max_allowed(fac):
+        return fac["max_hours"] * MAX_OVERLOAD
 
     for task in tasks:
         sub_id = task["subject_id"]
@@ -123,69 +117,76 @@ def generate_assignments(sem_type):
 
         valid = []
 
-        # strict filter
         for fac in faculty_list:
             if fac["department"] != dept:
                 continue
 
-            if not can_assign(fac, task["hours"]):
+            # 🔥 HARD CAP BLOCK
+            if fac["current_hours"] >= max_allowed(fac):
                 continue
 
-            if sub_id not in fac["unique_subjects"] and len(fac["unique_subjects"]) >= 5:
+            if fac["current_hours"] + task["hours"] > max_allowed(fac):
                 continue
 
             valid.append(fac)
-
-        # relaxed
-        if not valid:
-            for fac in faculty_list:
-                if fac["department"] != dept:
-                    continue
-
-                if fac["current_hours"] <= fac["max_hours"] + 2:
-                    valid.append(fac)
 
         if not valid:
             continue
 
         avg_load = sum(f["current_hours"] for f in faculty_list) / len(faculty_list)
 
-        # scoring
         scored = []
+
         for fac in valid:
             score = 0
 
-            score -= fac["current_hours"] * 12
+            # 🔥 PRIMARY: LOAD BALANCE (VERY STRONG)
+            score -= fac["current_hours"] * 30
 
-            if sub_id in fac["unique_subjects"]:
-                score += 60
+            diff = fac["current_hours"] - avg_load
+            score -= diff * 40
+
+            # 🔥 PRIORITIZE LOW LOAD
+            if fac["current_hours"] < avg_load:
+                score += 80
+
+            # 🔥 TYPE BALANCE (STRONG)
+            if task["type"] == "theory":
+                if fac["theory_count"] > fac["practical_count"]:
+                    score -= 50
+                else:
+                    score += 20
             else:
-                if len(fac["unique_subjects"]) >= 3:
-                    score -= 30
+                if fac["practical_count"] > fac["theory_count"]:
+                    score -= 50
+                else:
+                    score += 20
 
-            if fac["current_hours"] > avg_load:
-                score -= 40
+            # 🔥 SUBJECT REUSE (WEAK NOW)
+            if sub_id in fac["unique_subjects"]:
+                score += 10
 
+            # 🔥 PREFERENCES (LOW PRIORITY)
             if sub_id in fac["preferences"]:
-                score += 40
+                score += 10
 
             scored.append((fac, score))
 
         scored.sort(key=lambda x: (-x[1], x[0]["current_hours"]))
         best = scored[0][0]
 
-        # anchor
-        if sub_id in subject_anchor:
-            anchor = subject_anchor[sub_id]
-            if anchor in valid and can_assign(anchor, task["hours"]):
-                best = anchor
+        # 🔥 FINAL HARD CHECK (CRITICAL FIX)
+        if best["current_hours"] + task["hours"] > max_allowed(best):
+            continue
 
-        # update
+        # UPDATE
         best["current_hours"] += task["hours"]
         best["unique_subjects"].add(sub_id)
 
-        if sub_id not in subject_anchor:
-            subject_anchor[sub_id] = best
+        if task["type"] == "theory":
+            best["theory_count"] += 1
+        else:
+            best["practical_count"] += 1
 
         assignments.append({
             "course_id": task["course_id"],
@@ -204,24 +205,21 @@ def generate_assignments(sem_type):
     return assignments
 
 
-# =========================
-# API
-# =========================
+def get_all_assignments():
+    return generate_assignments("odd") + generate_assignments("even")
+
+
 @facultyPreference.route("/generate-assignment")
 def generate_assignment_api():
     try:
         sem_type = request.args.get("sem", "odd")
-        assignments = generate_assignments(sem_type)
-        return jsonify({"assignments": assignments})
+        return jsonify({"assignments": generate_assignments(sem_type)})
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e), "assignments": []}), 500
 
 
-# =========================
-# PAGE
-# =========================
 @facultyPreference.route("/faculty-assignment")
 def faculty_page():
     return render_template("facultyPreference.html")

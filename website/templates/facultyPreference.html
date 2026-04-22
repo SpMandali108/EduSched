@@ -683,6 +683,9 @@
                   </svg>
                   Export
                 </button>
+                <button class="btn btn-secondary" onclick="exportFacultySummary()">
+  Faculty Summary
+</button>
               </div>
             </div>
 
@@ -899,24 +902,165 @@ function updateSemBadge() {
     sem === "odd" ? "Odd Semester" : "Even Semester";
 }
 function exportCSV() {
-  if (!filteredData.length) return;
+  if (!fullData.length) {
+    alert("No data to export");
+    return;
+  }
 
-  const headers = Object.keys(filteredData[0]);
+  // =========================
+  // CALCULATE TOTAL HOURS PER FACULTY
+  // =========================
+  const facultyHours = {};
 
-  const csv = [
-    headers.join(","),
-    ...filteredData.map(row =>
-      headers.map(h => `"${row[h] ?? ""}"`).join(",")
-    )
-  ].join("\n");
+  fullData.forEach(row => {
+    const fid = row.faculty_id || "UNASSIGNED";
 
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
+    if (!facultyHours[fid]) {
+      facultyHours[fid] = 0;
+    }
+
+    // 🔥 IMPORTANT: use actual task hours, not cumulative
+    const hours = row.type === "practical"
+      ? (row.credits || 0) * 2
+      : (row.credits || 0);
+
+    facultyHours[fid] += hours;
+  });
+
+  // =========================
+  // CSV HEADERS
+  // =========================
+  const headers = [
+    "#",
+    "Division",
+    "Subject ID",
+    "Subject Name",
+    "Faculty ID",
+    "Faculty Name",
+    "Type",
+    "Credits",
+    "Assigned Hrs",
+    "Max Hrs",
+    "Total Faculty Hours"   // 🔥 NEW COLUMN
+  ];
+
+  let csv = headers.join(",") + "\n";
+
+  // =========================
+  // BUILD ROWS
+  // =========================
+  fullData.forEach((row, i) => {
+    const division = `${row.course_id}_${row.semester}_${row.division}`;
+    const fid = row.faculty_id || "UNASSIGNED";
+
+    const totalHours = facultyHours[fid] || 0;
+
+    const values = [
+      i + 1,
+      division,
+      row.subject_id,
+      row.subject_name,
+      fid,
+      row.faculty_name || "Unassigned",
+      row.type,
+      row.credits || 0,
+      row.assigned_hours || 0,
+      row.max_hours || 0,
+      totalHours   // 🔥 NEW VALUE
+    ];
+
+    csv += values.join(",") + "\n";
+  });
+
+  // =========================
+  // DOWNLOAD
+  // =========================
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = "faculty_assignment.csv";
+  a.download = "faculty_assignments.csv";
   a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function exportFacultySummary() {
+  if (!fullData.length) {
+    alert("No data to export");
+    return;
+  }
+
+  // =========================
+  // BUILD FACULTY SUMMARY
+  // =========================
+  const facultyMap = {};
+
+  fullData.forEach(row => {
+    const fid = row.faculty_id || "UNASSIGNED";
+
+    if (!facultyMap[fid]) {
+      facultyMap[fid] = {
+        faculty_id: fid,
+        faculty_name: row.faculty_name || "Unassigned",
+        max_hours: row.max_hours || 0,
+        assigned: 0
+      };
+    }
+
+    // calculate actual hours per task
+    const hours = row.type === "practical"
+      ? (row.credits || 0) * 2
+      : (row.credits || 0);
+
+    facultyMap[fid].assigned += hours;
+  });
+
+  // =========================
+  // CSV HEADERS
+  // =========================
+  const headers = [
+    "Faculty ID",
+    "Faculty Name",
+    "Max Hours / Week",
+    "Assigned Load (hrs)",
+    "Utilisation (%)"
+  ];
+
+  let csv = headers.join(",") + "\n";
+
+  // =========================
+  // BUILD ROWS
+  // =========================
+  Object.values(facultyMap).forEach(f => {
+    const utilisation = f.max_hours
+      ? ((f.assigned / f.max_hours) * 100).toFixed(1)
+      : 0;
+
+    const row = [
+      f.faculty_id,
+      f.faculty_name,
+      f.max_hours,
+      f.assigned,
+      utilisation
+    ];
+
+    csv += row.join(",") + "\n";
+  });
+
+  // =========================
+  // DOWNLOAD
+  // =========================
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "faculty_summary.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
 }
 
 function filterTable() {
