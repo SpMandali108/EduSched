@@ -15,31 +15,45 @@ function generateAssignment() {
         let labs = 0;
         let facultySet = new Set();
 
-        // ✅ FIXED LOOP
-        data.forEach(item => {
+        // FIX 1: API returns { assignments: [...] }, not a raw array
+        const items = Array.isArray(data) ? data : (data.assignments || []);
+
+        items.forEach(item => {
 
             total++;
-            if (item.type === "lab") labs++;
 
-            if (item.faculty_id !== "-" && item.faculty !== "UNASSIGNED") {
-                facultySet.add(item.faculty_id.trim());
+            // FIX 2: treat both "lab" and "practical" as practical/lab type
+            const itemType = (item.type || "").toLowerCase();
+            if (itemType === "lab" || itemType === "practical") labs++;
+
+            // FIX 3: faculty_name is the correct field (not item.faculty)
+            const facultyName = item.faculty_name || item.faculty || "UNASSIGNED";
+            const facultyId   = item.faculty_id  || "-";
+
+            if (facultyId !== "-" && facultyName !== "UNASSIGNED") {
+                facultySet.add(facultyId.trim());
             }
+
+            // FIX 4: subject_id is the correct field (not item.subject_code)
+            // Build course_sem_div from the actual fields returned by the API
+            const courseSemDiv = item.course_sem_div
+                || `${item.course_id || "-"} Sem${item.semester || "-"} ${item.division || "-"}`;
 
             html += `
             <tr>
-                <td>${item.course_sem_div || "-"}</td>
-                <td>${item.subject_code}</td>
-                <td>${item.faculty}</td>
-                <td>${item.type}</td>
-                <td>${item.credits}</td>
+                <td>${courseSemDiv}</td>
+                <td>${item.subject_id || item.subject_code || "-"}</td>
+                <td>${facultyName}</td>
+                <td>${item.type || "-"}</td>
+                <td>${item.credits || "-"}</td>
                 <td>
-                    <a href="/faculty/${item.faculty_id}" class="btn">View</a>
+                    <a href="/faculty/${facultyId}" class="btn">View</a>
                 </td>
             </tr>
             `;
         });
 
-        table.innerHTML = html;
+        table.innerHTML = html || "<tr><td colspan='6'>No assignments found</td></tr>";
 
         document.getElementById("totalSubjects").innerText = total;
         document.getElementById("totalLabs").innerText = labs;
