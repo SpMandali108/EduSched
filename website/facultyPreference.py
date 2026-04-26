@@ -93,17 +93,40 @@ def build_tasks(sem_type):
             raw_type = str(sub["type"]).strip().lower()
             normalised_type = "practical" if raw_type in ("practical", "lab") else raw_type
 
-            tasks.append({
-                "course_id": row["course_id"],
-                "semester": sem,
-                "division": div["division"],
-                "subject_id": sub["subject_id"],
-                "subject_name": sub["name"],
-                "department": sub["department"],
-                "type": normalised_type,
-                "credits": sub["credits"],
-                "hours": get_hours(sub)
-            })
+            if normalised_type == "practical":
+                # ENFORCE: One lab session per week for the division.
+                # All batches MUST happen at the same time, so we need multiple faculty.
+                student_count = int(div.get("students", 60))
+                # Assuming batch size of 30
+                num_batches = (student_count + 29) // 30 
+                
+                for b_idx in range(num_batches):
+                    batch_label = f"B{b_idx + 1}" if num_batches > 1 else None
+                    tasks.append({
+                        "course_id": row["course_id"],
+                        "semester": sem,
+                        "division": div["division"],
+                        "batch": batch_label,
+                        "subject_id": sub["subject_id"],
+                        "subject_name": sub["name"],
+                        "department": sub["department"],
+                        "type": normalised_type,
+                        "credits": sub["credits"],
+                        "hours": get_hours(sub)
+                    })
+            else:
+                tasks.append({
+                    "course_id": row["course_id"],
+                    "semester": sem,
+                    "division": div["division"],
+                    "batch": None,
+                    "subject_id": sub["subject_id"],
+                    "subject_name": sub["name"],
+                    "department": sub["department"],
+                    "type": normalised_type,
+                    "credits": sub["credits"],
+                    "hours": get_hours(sub)
+                })
 
     # FIX: Schedule practicals FIRST so theory assignments don't exhaust faculty
     # capacity before lab sessions can be assigned. Matches the same priority
@@ -134,6 +157,10 @@ def generate_assignments(sem_type="odd"):
     # greedy selection rapidly fills different faculty per division, leaving
     # no one available for later practical tasks.
     subject_anchor = {}
+    
+    # NEW: Track faculty assigned to different batches of the SAME lab in the SAME division
+    # to ensure they are parallelizable.
+    division_subject_faculty = {} # (division_id, sub_id) -> set of faculty_ids
 
     for task in tasks:
         sub_id = task["subject_id"]
@@ -149,6 +176,11 @@ def generate_assignments(sem_type="odd"):
                 continue
 
             if fac["current_hours"] + task["hours"] > max_allowed(fac):
+                continue
+                
+            # ENFORCE: For parallel batches, faculty must be distinct
+            div_key = (task["division"], task["semester"], sub_id)
+            if div_key in division_subject_faculty and fac["faculty_id"] in division_subject_faculty[div_key]:
                 continue
 
             valid.append(fac)
@@ -225,20 +257,26 @@ def generate_assignments(sem_type="odd"):
         # Record anchor for this subject
         if sub_id not in subject_anchor:
             subject_anchor[sub_id] = best
+            
+        # Update division_subject_faculty tracker
+        div_key = (task["division"], task["semester"], sub_id)
+        if div_key not in division_subject_faculty:
+            division_subject_faculty[div_key] = set()
+        division_subject_faculty[div_key].add(best["faculty_id"])
 
         assignments.append({
             "course_id": task["course_id"],
             "semester": task["semester"],
             "division": task["division"],
-            "department": task["department"],
-            "subject_id": task["subject_id"],
+            "batch": task.get("batch"),
+            "subject_id": sub_id,
             "subject_name": task["subject_name"],
             "faculty_id": best["faculty_id"],
             "faculty_name": best["name"],
             "type": task["type"],
             "credits": task["credits"],
-            "assigned_hours": best["current_hours"],
-            "max_hours": best["max_hours"]
+            "department": task["department"],
+            "hours": task["hours"]
         })
 
     print(f"ASSIGNMENTS ({sem_type}): {len(assignments)} total "

@@ -63,9 +63,9 @@ def load_sample_data_api():
     try:
         base_dir = Path(current_app.root_path).parent / "data"
         stats = load_sample_data(_db(), base_dir)
-        return jsonify({"message": "Sample data loaded", "stats": stats})
+        return jsonify({"success": True, "message": "Sample data loaded", "stats": stats})
     except Exception as exc:
-        return jsonify({"error": str(exc)}), 500
+        return jsonify({"success": False, "error": str(exc)}), 500
 
 
 @timetable_api.route("/api/sync-faculty-assignment", methods=["POST"])
@@ -118,9 +118,24 @@ def sync_faculty_assignment_api():
             generator = TimetableGenerator(_db())
             response["generation"] = generator.generate({"force_regenerate": True})
 
+        response["success"] = True
         return jsonify(response)
     except Exception as exc:
-        return jsonify({"error": str(exc)}), 500
+        return jsonify({"success": False, "error": str(exc)}), 500
+
+
+@timetable_api.route("/api/reset-data", methods=["POST"])
+def reset_data_api():
+    try:
+        _db().classrooms.delete_many({})
+        _db().subjects.delete_many({})
+        _db().faculty.delete_many({})
+        _db().student_groups.delete_many({})
+        _db().timing_config.delete_many({})
+        _db().timetables.delete_many({})
+        return jsonify({"success": True, "message": "All university data has been cleared"})
+    except Exception as exc:
+        return jsonify({"success": False, "error": str(exc)}), 500
 
 
 @timetable_api.route("/api/classrooms", methods=["GET", "POST"])

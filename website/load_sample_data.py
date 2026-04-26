@@ -324,6 +324,7 @@ def load_assignment_data(db, csv_root, assignments):
     db.faculty.delete_many({})
     db.student_groups.delete_many({})
     db.timetables.delete_many({})
+    db.faculty_assignments.delete_many({})
 
     if classrooms:
         db.classrooms.insert_many(classrooms)
@@ -333,6 +334,8 @@ def load_assignment_data(db, csv_root, assignments):
         db.faculty.insert_many(faculty)
     if student_groups:
         db.student_groups.insert_many(student_groups)
+    if assignments:
+        db.faculty_assignments.insert_many(assignments)
 
     if not db.timing_config.find_one({"config_id": "default"}):
         db.timing_config.insert_one(_default_timing_config())

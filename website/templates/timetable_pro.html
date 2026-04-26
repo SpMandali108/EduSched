@@ -349,15 +349,27 @@
 
                     <!-- Quick Actions -->
                     <div class="glass rounded-2xl p-8">
-                        <h2 class="text-2xl font-bold mb-6">Quick Actions</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <button onclick="loadSampleData()" class="btn px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all">
-                                📥 Load Sample Data
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                            <h2 class="text-2xl font-bold">University Controls</h2>
+                            <div class="flex items-center space-x-3 bg-slate-800 p-1.5 rounded-xl border border-slate-700">
+                                <span class="text-xs font-bold text-gray-400 px-2 uppercase tracking-wider">Mode:</span>
+                                <select id="semesterMode" class="bg-slate-700 border-none rounded-lg text-xs font-bold text-white py-1.5 px-3 focus:ring-0">
+                                    <option value="odd">Odd Semester (1,3,5,7)</option>
+                                    <option value="even">Even Semester (2,4,6)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <button onclick="loadSampleData()" class="btn px-6 py-4 bg-slate-800 text-white rounded-xl font-medium border border-slate-700 hover:bg-slate-700 transition-all">
+                                📥 Load Sample CSVs
                             </button>
-                            <button onclick="generateTimetable()" class="btn px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium hover:shadow-lg transition-all">
+                            <button onclick="syncFacultyAssignments()" class="btn px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium shadow-lg hover:shadow-blue-500/20 transition-all">
+                                🔄 Sync Faculty Data
+                            </button>
+                            <button onclick="generateTimetable()" class="btn px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-green-500/20 transition-all">
                                 ⚡ Generate Timetable
                             </button>
-                            <button onclick="resetAllData()" class="btn px-6 py-4 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-medium hover:shadow-lg transition-all">
+                            <button onclick="resetAllData()" class="btn px-6 py-4 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-medium shadow-lg hover:shadow-red-500/20 transition-all">
                                 🗑️ Reset All Data
                             </button>
                         </div>

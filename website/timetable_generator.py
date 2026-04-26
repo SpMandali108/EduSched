@@ -38,6 +38,7 @@ class TimetableGenerator:
 
         self.subject_priority = {}
         self.daily_slot_usage = defaultdict(lambda: defaultdict(set))
+        self.division_day_has_lab = defaultdict(set)  # division_id -> set of days
         self.generation_warnings = []
 
     def generate(self, params):
@@ -98,6 +99,7 @@ class TimetableGenerator:
         self.subjects = list(self.db.subjects.find({}))
         self.faculty = list(self.db.faculty.find({}))
         self.student_groups = list(self.db.student_groups.find({}))
+        self.faculty_assignments = list(self.db.faculty_assignments.find({}))
         self.timing_config = self.db.timing_config.find_one({"config_id": "default"})
 
     def _validate_data(self):
@@ -251,8 +253,23 @@ class TimetableGenerator:
         time_slots = self.timing_config["time_slots"]
 
         for day in working_days:
+            teaching_slots_in_row = 0
             for slot in time_slots:
-                entry_type = "break" if slot.get("is_break") else "empty"
+                # Determine if this slot should be a break
+                is_config_break = slot.get("is_break", False)
+                
+                if is_config_break:
+                    entry_type = "break"
+                    teaching_slots_in_row = 0
+                else:
+                    teaching_slots_in_row += 1
+                    if teaching_slots_in_row > 4:
+                        # Force a break after 4 slots
+                        entry_type = "break"
+                        teaching_slots_in_row = 0
+                    else:
+                        entry_type = "empty"
+                
                 entries.append({"day": day, "slot_id": slot["slot_id"], "entry_type": entry_type})
 
         try:
@@ -323,8 +340,10 @@ class TimetableGenerator:
         for subject in subjects:
             credits = subject.get("credits", 0)
             if subject.get("subject_type") == "Practical":
-                required_slots += credits * self.timing_config.get("practical_duration_slots", 2)
+                # 1 credit = 2 slots (2 hours) as per user requirement
+                required_slots += credits * 2
             else:
+                # 1 credit = 1 slot (1 hour)
                 required_slots += credits
 
         if required_slots > available_slots:
@@ -342,10 +361,13 @@ class TimetableGenerator:
         time_slots,
         student_count,
     ):
+        # Build a map of available slots for this division (excluding breaks)
         slots_by_day = defaultdict(list)
+        break_slots = {(e["day"], e["slot_id"]) for e in entries if e["entry_type"] == "break"}
+        
         for day in working_days:
             for slot in time_slots:
-                if not slot.get("is_break"):
+                if (day, slot["slot_id"]) not in break_slots:
                     slots_by_day[day].append(slot)
 
         scheduled_count = {key: 0 for key in requirements}
@@ -354,15 +376,16 @@ class TimetableGenerator:
         practical_subjects = [subject for subject in subjects if subject.get("subject_type") == "Practical"]
         theory_subjects = [subject for subject in subjects if subject.get("subject_type") != "Practical"]
 
-        # Schedule practicals first (higher priority)
+        # Schedule practicals first (most constrained)
         for subject in practical_subjects:
+            # ENFORCE: Any lab should be done ONCE a week
             self._schedule_practical_continuous_smart(
                 division_id,
                 subject,
                 entries,
                 slots_by_day,
                 student_count,
-                requirements[subject["schedule_key"]],
+                1,  # required_sessions is now always 1 for labs
                 scheduled_count,
                 subject_day_usage,
             )
@@ -383,9 +406,14 @@ class TimetableGenerator:
         unscheduled = []
         for subject in subjects:
             schedule_key = subject["schedule_key"]
-            if scheduled_count[schedule_key] < requirements[schedule_key]:
+            # For practicals, we scheduled 1 session regardless of credits,
+            # but we want to check if it was actually scheduled.
+            is_practical = subject.get("subject_type") == "Practical"
+            target = 1 if is_practical else requirements[schedule_key]
+            
+            if scheduled_count[schedule_key] < target:
                 unscheduled.append(
-                    f"{subject['subject_code']} ({requirements[schedule_key] - scheduled_count[schedule_key]} left)"
+                    f"{subject['subject_code']} ({target - scheduled_count[schedule_key]} left)"
                 )
 
         return entries, unscheduled
@@ -462,41 +490,72 @@ class TimetableGenerator:
         subject_code = subject["subject_code"]
         subject_key = subject["schedule_key"]
         faculty_list = self._get_faculty_for_subject(subject_code)
-
+        
         if not faculty_list:
             raise ConstraintViolation(f"No faculty assigned for subject {subject_code}")
 
-        practical_duration = self.timing_config.get("practical_duration_slots", 2)
+        # ENFORCE: 1 credit = 2 hours, and it's always one session
+        credits = subject.get("credits", 1)
+        practical_duration = credits * 2
+        
         batch_size = subject.get("lab_batch_size") or student_count
         
         # Calculate number of batches needed
         num_batches = (student_count + batch_size - 1) // batch_size
-        effective_lab_size = min(student_count, batch_size)
 
-        for b_idx in range(num_batches):
-            batch_label = f"B{b_idx + 1}" if num_batches > 1 else None
-            sessions_scheduled_for_batch = 0
-            
-            while sessions_scheduled_for_batch < required_sessions:
-                placed = False
-                for day in self._get_balanced_day_order(division_id, list(slots_by_day.keys())):
-                    # Allow multiple practicals on same day for DIFFERENT batches,
-                    # but only ONE session per batch per day for this subject.
-                    if (subject_code, batch_label) in subject_day_usage and day in subject_day_usage[(subject_code, batch_label)]:
-                        continue
+        total_sessions_scheduled = 0
+        while total_sessions_scheduled < required_sessions:
+            placed = False
+            for day in self._get_balanced_day_order(division_id, list(slots_by_day.keys())):
+                # ENFORCE: Only one lab (practical) session per day for this division
+                if day in self.division_day_has_lab[division_id]:
+                    continue
+                
+                # Check if this subject already scheduled on this day
+                if (subject_code, "ALL") in subject_day_usage and day in subject_day_usage[(subject_code, "ALL")]:
+                    continue
+                
+                blocks = self._get_available_day_blocks(
+                    division_id, day, slots_by_day[day], practical_duration
+                )
+                
+                if not blocks:
+                    continue
+
+                for continuous_slots in blocks:
+                    slot_ids = [slot["slot_id"] for slot in continuous_slots]
                     
-                    blocks = self._get_available_day_blocks(
-                        division_id, day, slots_by_day[day], practical_duration
-                    )
+                    # ENFORCE: Find DISTINCT resources for ALL batches at the same time
+                    selected_resources = [] # list of (faculty, classroom)
+                    used_faculty_ids = set()
+                    used_room_ids = set()
                     
-                    for continuous_slots in blocks:
-                        slot_ids = [slot["slot_id"] for slot in continuous_slots]
-                        faculty, classroom = self._select_practical_resources(
-                            faculty_list, division_id, day, slot_ids, effective_lab_size
+                    all_batches_possible = True
+                    for b_idx in range(num_batches):
+                        batch_label = f"B{b_idx + 1}" if num_batches > 1 else None
+                        
+                        # NEW: Use specific assigned faculty if available
+                        assigned_faculty = self._get_assigned_faculty(division_id, subject_code, batch_label)
+                        candidate_faculty = [assigned_faculty] if assigned_faculty else faculty_list
+                        
+                        faculty, classroom = self._select_practical_resources_with_excludes(
+                            candidate_faculty, division_id, day, slot_ids, batch_size, 
+                            used_faculty_ids, used_room_ids
                         )
-                        if not faculty or not classroom:
-                            continue
+                        if faculty and classroom:
+                            selected_resources.append((faculty, classroom))
+                            used_faculty_ids.add(faculty["faculty_id"])
+                            used_room_ids.add(classroom["classroom_id"])
+                        else:
+                            all_batches_possible = False
+                            break
+                    
+                    if not all_batches_possible:
+                        continue
 
+                    # If we got here, all batches can be scheduled in parallel!
+                    for b_idx, (faculty, classroom) in enumerate(selected_resources):
+                        batch_label = f"B{b_idx + 1}" if num_batches > 1 else None
                         for slot in continuous_slots:
                             self._assign_lecture(
                                 entries,
@@ -509,28 +568,27 @@ class TimetableGenerator:
                                 "practical",
                                 batch_label,
                             )
-
                         self._mark_assignment(division_id, faculty, classroom, day, slot_ids)
-                        sessions_scheduled_for_batch += 1
-                        
-                        # Track usage per batch to ensure day variety
-                        if (subject_code, batch_label) not in subject_day_usage:
-                            subject_day_usage[(subject_code, batch_label)] = set()
-                        subject_day_usage[(subject_code, batch_label)].add(day)
-                        
-                        placed = True
-                        break
 
-                    if placed:
-                        break
-                
-                if not placed:
-                    # Could not schedule all sessions for this batch
+                    total_sessions_scheduled += 1
+                    scheduled_count[subject_key] += 1
+                    
+                    # Track usage for "One Lab Per Day" constraint
+                    self.division_day_has_lab[division_id].add(day)
+                    
+                    # Track usage per subject
+                    if (subject_code, "ALL") not in subject_day_usage:
+                        subject_day_usage[(subject_code, "ALL")] = set()
+                    subject_day_usage[(subject_code, "ALL")].add(day)
+                    
+                    placed = True
                     break
-
-            # If it's the last batch, we update the global scheduled count
-            if b_idx == num_batches - 1:
-                scheduled_count[subject_key] += sessions_scheduled_for_batch
+                    
+                if placed:
+                    break
+            
+            if not placed:
+                break
 
     def _select_theory_resources(
         self,
@@ -559,6 +617,61 @@ class TimetableGenerator:
                     return faculty, classroom
 
         return None, None
+    def _select_practical_resources_with_excludes(
+        self,
+        faculty_list,
+        division_id,
+        day,
+        slot_ids,
+        student_count,
+        exclude_faculty_ids,
+        exclude_room_ids,
+    ):
+        for relax_preferences, relax_max_hours in ((False, False), (True, False), (True, True)):
+            for faculty in sorted(faculty_list, key=lambda item: self.faculty_hours[item["faculty_id"]]):
+                if faculty["faculty_id"] in exclude_faculty_ids:
+                    continue
+                    
+                if not all(
+                    self._check_practical_constraints(
+                        faculty["faculty_id"],
+                        division_id,
+                        day,
+                        slot_id,
+                        faculty,
+                        relax_preferences=relax_preferences,
+                        relax_max_hours=relax_max_hours,
+                    )
+                    for slot_id in slot_ids
+                ):
+                    continue
+
+                classroom = self._find_practical_classroom_with_exclude(day, slot_ids, student_count, exclude_room_ids)
+                if classroom:
+                    return faculty, classroom
+
+        return None, None
+
+    def _find_practical_classroom_with_exclude(self, day, slot_ids, student_count, exclude_room_ids):
+        # Sort classrooms by capacity (prefer smaller ones that fit)
+        potential = [c for c in self.classrooms if c["room_type"] == "Practical" and c["classroom_id"] not in exclude_room_ids]
+        sorted_rooms = sorted(potential, key=lambda c: c["capacity"])
+
+        for room in sorted_rooms:
+            if room["capacity"] < student_count:
+                continue
+
+            # Check if room is available for all slots
+            is_available = True
+            for slot_id in slot_ids:
+                if (day, slot_id) in self.classroom_schedule[room["classroom_id"]]:
+                    is_available = False
+                    break
+            
+            if is_available:
+                return room
+        return None
+
 
     def _select_practical_resources(
         self,
@@ -730,6 +843,18 @@ class TimetableGenerator:
     ):
         for entry in entries:
             if entry["day"] == day and entry["slot_id"] == slot_id:
+                # If it's the same subject (parallel batch), combine batch labels
+                if entry.get("subject_code") == subject["subject_code"] and batch:
+                    existing_batch = entry.get("batch")
+                    if existing_batch and batch not in existing_batch:
+                        entry["batch"] = f"{existing_batch}, {batch}"
+                    elif not existing_batch:
+                        entry["batch"] = batch
+                    # Also record multiple faculty/rooms? 
+                    # Usually for student view, we just show the subject and batches.
+                    return
+
+                # Otherwise, overwrite (shouldn't happen for students unless conflict)
                 entry["subject_code"] = subject["subject_code"]
                 entry["subject_name"] = subject["subject_name"]
                 entry["faculty_id"] = faculty["faculty_id"]
@@ -738,7 +863,7 @@ class TimetableGenerator:
                 entry["entry_type"] = entry_type
                 if batch:
                     entry["batch"] = batch
-                break
+                return
 
         detail_entry = {
             "day": day,
@@ -785,6 +910,43 @@ class TimetableGenerator:
             for faculty in self.faculty
             if any(code in faculty.get("subjects", []) for code in fallback_codes)
         ]
+
+    def _get_assigned_faculty(self, division_id, subject_code, batch_label=None):
+        """
+        Returns the specific faculty member assigned to this division/subject/batch
+        from the faculty_assignments collection.
+        """
+        # division_id is e.g. "CSE_UG_SEM1_A"
+        # In faculty_assignments, division is "A", semester is 1, course_id is "CSE_UG"
+        parts = division_id.split("_SEM")
+        if len(parts) < 2:
+            return None
+        course_id = parts[0]
+        sem_div = parts[1].split("_")
+        if len(sem_div) < 2:
+            semester_raw = parts[1]
+            # Try splitting by just "_" if _SEM wasn't followed by a number immediately?
+            # Actually f"{course_id}_SEM{semester}" is the pattern.
+            return None
+        
+        try:
+            semester = int(sem_div[0])
+            division = sem_div[1]
+        except:
+            return None
+        
+        for a in self.faculty_assignments:
+            if (a["course_id"] == course_id and 
+                a["semester"] == semester and 
+                a["division"] == division and 
+                a["subject_id"] == subject_code and
+                a.get("batch") == batch_label):
+                
+                # Find the faculty object
+                for f in self.faculty:
+                    if f["faculty_id"] == a["faculty_id"]:
+                        return f
+        return None
 
     def _subject_code_fallbacks(self, subject_code):
         if subject_code.endswith("P"):

@@ -93,7 +93,7 @@ async function updateDashboardStats() {
 async function loadSampleData() {
     showLoading(true, 'Loading University Sample Data...');
     try {
-        const response = await fetch(`${API_BASE}/load-sample`, { method: 'POST' });
+        const response = await fetch(`${API_BASE}/load-sample-data`, { method: 'POST' });
         const result = await response.json();
         
         if (result.success) {
@@ -104,6 +104,33 @@ async function loadSampleData() {
         }
     } catch (error) {
         showToast('Error', 'Network error occurred', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function syncFacultyAssignments() {
+    const sem = document.getElementById('semesterMode').value;
+    showLoading(true, `Syncing ${sem.toUpperCase()} Semester Faculty Assignments...`);
+    
+    try {
+        const response = await fetch(`${API_BASE}/sync-faculty-assignment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sem: sem, generate: true })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            showToast('Sync Success', `Faculty data for ${sem} semester synced and timetables generated!`, 'success');
+            updateDashboardStats();
+            switchTab('timetable');
+            loadTimetableOptions();
+        } else {
+            showToast('Sync Failed', result.error || 'Failed to sync faculty assignments', 'error');
+        }
+    } catch (error) {
+        showToast('Error', 'Network error during faculty sync', 'error');
     } finally {
         showLoading(false);
     }
@@ -379,7 +406,7 @@ async function loadTimetableOptions() {
     if (!type) return;
     
     try {
-        const response = await fetch(`${API_BASE}/timetable?type=${type}`);
+        const response = await fetch(`${API_BASE}/timetable?entity_type=${type}`);
         const data = await response.json();
         const timetables = data.timetables || [];
         
@@ -412,7 +439,7 @@ async function viewSelectedTimetable() {
     
     try {
         // Need to find the timetable_id for the entity_id
-        const listResponse = await fetch(`${API_BASE}/timetable?type=${type}`);
+        const listResponse = await fetch(`${API_BASE}/timetable?entity_type=${type}`);
         const listData = await listResponse.json();
         const timetableInfo = (listData.timetables || []).find(t => t.entity_id === entity_id);
         
