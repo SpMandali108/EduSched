@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Faculty Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'DM Sans', Arial, sans-serif;
+    background: #f0f4f9;
+    padding: 32px 20px;
+    color: #1a1a2e;
+}
+
+.container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+/* ── Header ── */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #0C447C;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #378ADD;
+    border: 2px solid #85B7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 500;
+    color: #E6F1FB;
+    flex-shrink: 0;
+}
+
+.header-info { flex: 1; }
+
+.header-name {
+    font-size: 20px;
+    font-weight: 500;
+    color: #E6F1FB;
+    margin-bottom: 4px;
+}
+
+.header-sub {
+    font-size: 13px;
+    color: #85B7EB;
+}
+
+.status-badge {
+    background: #185FA5;
+    border: 1px solid #378ADD;
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: #B5D4F4;
+    white-space: nowrap;
+}
+
+/* ── Stat cards ── */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #dde6f0;
+    border-top: 3px solid #378ADD;
+    border-radius: 10px;
+    padding: 16px 18px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #6b7a90;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 500;
+    color: #0C447C;
+}
+
+/* load bar inside stat card */
+.load-bar-wrap { margin-top: 8px; }
+
+.load-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #6b7a90;
+    margin-bottom: 5px;
+}
+
+.load-track {
+    height: 6px;
+    background: #dde6f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.load-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: #378ADD;
+}
+
+/* ── Table section ── */
+.section-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: #185FA5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dde6f0;
+}
+
+.table-wrap {
+    background: #ffffff;
+    border: 1px solid #dde6f0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: fixed;
+}
+
+thead {
+    background: #E6F1FB;
+}
+
+thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    color: #0C447C;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border-bottom: 1px solid #B5D4F4;
+}
+
+tbody td {
+    padding: 11px 16px;
+    color: #1a1a2e;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: middle;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover td {
+    background: #f5f9ff;
+}
+
+.division-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #5a6a80;
+}
+
+/* ── Type pills ── */
+.pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.pill-lecture  { background: #E6F1FB; color: #0C447C; }
+.pill-lab      { background: #EAF3DE; color: #3B6D11; }
+.pill-tutorial { background: #FAEEDA; color: #633806; }
+.pill-default  { background: #F1EFE8; color: #5F5E5A; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="avatar">
+            {{ faculty.name[:2]|upper if faculty.name else 'FA' }}
+        </div>
+        <div class="header-info">
+            <div class="header-name">{{ faculty.name }}</div>
+            <div class="header-sub">{{ faculty.dept_id }} &nbsp;·&nbsp; ID: {{ faculty.faculty_id }}</div>
+        </div>
+        <div class="status-badge">Active Faculty</div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">Department</div>
+            <div class="stat-value">{{ faculty.dept_id }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Experience</div>
+            <div class="stat-value">{{ faculty.experience }} yrs</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Max hours / wk</div>
+            <div class="stat-value">{{ faculty.max_hours }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Assigned load</div>
+            <div class="stat-value" style="color:#185FA5">{{ total_load }} hrs</div>
+            <div class="load-bar-wrap">
+                {% set pct = ((total_load / faculty.max_hours) * 100)|round|int if faculty.max_hours else 0 %}
+                <div class="load-row">
+                    <span>Utilisation</span>
+                    <span>{{ pct }}%</span>
+                </div>
+                <div class="load-track">
+                    <div class="load-fill" style="width: {{ pct }}%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subjects table -->
+    <div class="section-title">Assigned subjects</div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:30%">Division</th>
+                    <th style="width:28%">Subject</th>
+                    <th style="width:22%">Type</th>
+                    <th style="width:20%">Credits</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in subjects %}
+                <tr>
+                    <td class="division-cell">{{ s.course_id }}_{{ s.semester }}_{{ s.division }}</td>
+                    <td>{{ s.subject_id }}</td>
+                    <td>
+                        {% set t = s.type|lower %}
+                        {% if t == 'lecture' %}
+                            <span class="pill pill-lecture">Lecture</span>
+                        {% elif t == 'lab' %}
+                            <span class="pill pill-lab">Lab</span>
+                        {% elif t == 'tutorial' %}
+                            <span class="pill pill-tutorial">Tutorial</span>
+                        {% else %}
+                            <span class="pill pill-default">{{ s.type }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ s.credits }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

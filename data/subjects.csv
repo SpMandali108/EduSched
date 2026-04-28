@@ -1,0 +1,441 @@
+subject_id,subject_name,dept_id,type,credits
+CSE101T,Programming in Python,CSE,Theory,3
+CSE102T,Data Structures,CSE,Theory,3
+CSE103T,Discrete Mathematics,CSE,Theory,2
+CSE104T,DBMS,CSE,Theory,3
+CSE105T,Operating Systems,CSE,Theory,4
+CSE101P,Programming in Python Lab,CSE,Practical,1
+CSE102P,Data Structures Lab,CSE,Practical,1
+CSE103P,Discrete Mathematics Lab,CSE,Practical,1
+CSE201T,Programming in Python,CSE,Theory,3
+CSE202T,Data Structures,CSE,Theory,4
+CSE203T,Discrete Mathematics,CSE,Theory,3
+CSE204T,DBMS,CSE,Theory,3
+CSE205T,Operating Systems,CSE,Theory,2
+CSE201P,Programming in Python Lab,CSE,Practical,1
+CSE202P,Data Structures Lab,CSE,Practical,1
+CSE203P,Discrete Mathematics Lab,CSE,Practical,1
+CSE301T,Programming in Python,CSE,Theory,3
+CSE302T,Data Structures,CSE,Theory,2
+CSE303T,Discrete Mathematics,CSE,Theory,3
+CSE304T,DBMS,CSE,Theory,4
+CSE305T,Operating Systems,CSE,Theory,3
+CSE301P,Programming in Python Lab,CSE,Practical,1
+CSE302P,Data Structures Lab,CSE,Practical,1
+CSE303P,Discrete Mathematics Lab,CSE,Practical,1
+CSE401T,Programming in Python,CSE,Theory,4
+CSE402T,Data Structures,CSE,Theory,3
+CSE403T,Discrete Mathematics,CSE,Theory,3
+CSE404T,DBMS,CSE,Theory,2
+CSE405T,Operating Systems,CSE,Theory,3
+CSE401P,Programming in Python Lab,CSE,Practical,1
+CSE402P,Data Structures Lab,CSE,Practical,1
+CSE403P,Discrete Mathematics Lab,CSE,Practical,1
+CSE501T,Programming in Python,CSE,Theory,2
+CSE502T,Data Structures,CSE,Theory,3
+CSE503T,Discrete Mathematics,CSE,Theory,4
+CSE504T,DBMS,CSE,Theory,3
+CSE505T,Operating Systems,CSE,Theory,3
+CSE501P,Programming in Python Lab,CSE,Practical,1
+CSE502P,Data Structures Lab,CSE,Practical,1
+CSE503P,Discrete Mathematics Lab,CSE,Practical,1
+CSE601T,Programming in Python,CSE,Theory,3
+CSE602T,Data Structures,CSE,Theory,3
+CSE603T,Discrete Mathematics,CSE,Theory,2
+CSE604T,DBMS,CSE,Theory,3
+CSE605T,Operating Systems,CSE,Theory,4
+CSE601P,Programming in Python Lab,CSE,Practical,1
+CSE602P,Data Structures Lab,CSE,Practical,1
+CSE603P,Discrete Mathematics Lab,CSE,Practical,1
+CSE701T,Programming in Python,CSE,Theory,3
+CSE702T,Data Structures,CSE,Theory,4
+CSE703T,Discrete Mathematics,CSE,Theory,3
+CSE704T,DBMS,CSE,Theory,3
+CSE705T,Operating Systems,CSE,Theory,2
+CSE701P,Programming in Python Lab,CSE,Practical,1
+CSE702P,Data Structures Lab,CSE,Practical,1
+CSE703P,Discrete Mathematics Lab,CSE,Practical,1
+CSE801T,Programming in Python,CSE,Theory,3
+CSE802T,Data Structures,CSE,Theory,2
+CSE803T,Discrete Mathematics,CSE,Theory,3
+CSE804T,DBMS,CSE,Theory,4
+CSE805T,Operating Systems,CSE,Theory,3
+CSE801P,Programming in Python Lab,CSE,Practical,1
+CSE802P,Data Structures Lab,CSE,Practical,1
+CSE803P,Discrete Mathematics Lab,CSE,Practical,1
+CSE501T,Advanced Algorithms,CSE,Theory,4
+CSE502T,Machine Learning,CSE,Theory,3
+CSE503T,Distributed Systems,CSE,Theory,3
+CSE504T,Advanced DBMS,CSE,Theory,2
+CSE501P,Advanced Algorithms Lab,CSE,Practical,1
+CSE502P,Machine Learning Lab,CSE,Practical,1
+CSE601T,Advanced Algorithms,CSE,Theory,3
+CSE602T,Machine Learning,CSE,Theory,3
+CSE603T,Distributed Systems,CSE,Theory,2
+CSE604T,Advanced DBMS,CSE,Theory,3
+CSE601P,Advanced Algorithms Lab,CSE,Practical,1
+CSE602P,Machine Learning Lab,CSE,Practical,1
+CSE701T,Advanced Algorithms,CSE,Theory,3
+CSE702T,Machine Learning,CSE,Theory,2
+CSE703T,Distributed Systems,CSE,Theory,3
+CSE704T,Advanced DBMS,CSE,Theory,4
+CSE701P,Advanced Algorithms Lab,CSE,Practical,1
+CSE702P,Machine Learning Lab,CSE,Practical,1
+CSE801T,Advanced Algorithms,CSE,Theory,2
+CSE802T,Machine Learning,CSE,Theory,3
+CSE803T,Distributed Systems,CSE,Theory,4
+CSE804T,Advanced DBMS,CSE,Theory,3
+CSE801P,Advanced Algorithms Lab,CSE,Practical,1
+CSE802P,Machine Learning Lab,CSE,Practical,1
+ECE101T,Basic Electronics,ECE,Theory,3
+ECE102T,Circuit Theory,ECE,Theory,4
+ECE103T,Digital Logic,ECE,Theory,3
+ECE104T,Signals and Systems,ECE,Theory,3
+ECE105T,Microprocessors,ECE,Theory,2
+ECE101P,Basic Electronics Lab,ECE,Practical,1
+ECE102P,Circuit Theory Lab,ECE,Practical,1
+ECE103P,Digital Logic Lab,ECE,Practical,1
+ECE201T,Basic Electronics,ECE,Theory,3
+ECE202T,Circuit Theory,ECE,Theory,2
+ECE203T,Digital Logic,ECE,Theory,3
+ECE204T,Signals and Systems,ECE,Theory,4
+ECE205T,Microprocessors,ECE,Theory,3
+ECE201P,Basic Electronics Lab,ECE,Practical,1
+ECE202P,Circuit Theory Lab,ECE,Practical,1
+ECE203P,Digital Logic Lab,ECE,Practical,1
+ECE301T,Basic Electronics,ECE,Theory,4
+ECE302T,Circuit Theory,ECE,Theory,3
+ECE303T,Digital Logic,ECE,Theory,3
+ECE304T,Signals and Systems,ECE,Theory,2
+ECE305T,Microprocessors,ECE,Theory,3
+ECE301P,Basic Electronics Lab,ECE,Practical,1
+ECE302P,Circuit Theory Lab,ECE,Practical,1
+ECE303P,Digital Logic Lab,ECE,Practical,1
+ECE401T,Basic Electronics,ECE,Theory,2
+ECE402T,Circuit Theory,ECE,Theory,3
+ECE403T,Digital Logic,ECE,Theory,4
+ECE404T,Signals and Systems,ECE,Theory,3
+ECE405T,Microprocessors,ECE,Theory,3
+ECE401P,Basic Electronics Lab,ECE,Practical,1
+ECE402P,Circuit Theory Lab,ECE,Practical,1
+ECE403P,Digital Logic Lab,ECE,Practical,1
+ECE501T,Basic Electronics,ECE,Theory,3
+ECE502T,Circuit Theory,ECE,Theory,3
+ECE503T,Digital Logic,ECE,Theory,2
+ECE504T,Signals and Systems,ECE,Theory,3
+ECE505T,Microprocessors,ECE,Theory,4
+ECE501P,Basic Electronics Lab,ECE,Practical,1
+ECE502P,Circuit Theory Lab,ECE,Practical,1
+ECE503P,Digital Logic Lab,ECE,Practical,1
+ECE601T,Basic Electronics,ECE,Theory,3
+ECE602T,Circuit Theory,ECE,Theory,4
+ECE603T,Digital Logic,ECE,Theory,3
+ECE604T,Signals and Systems,ECE,Theory,3
+ECE605T,Microprocessors,ECE,Theory,2
+ECE601P,Basic Electronics Lab,ECE,Practical,1
+ECE602P,Circuit Theory Lab,ECE,Practical,1
+ECE603P,Digital Logic Lab,ECE,Practical,1
+ECE701T,Basic Electronics,ECE,Theory,3
+ECE702T,Circuit Theory,ECE,Theory,2
+ECE703T,Digital Logic,ECE,Theory,3
+ECE704T,Signals and Systems,ECE,Theory,4
+ECE705T,Microprocessors,ECE,Theory,3
+ECE701P,Basic Electronics Lab,ECE,Practical,1
+ECE702P,Circuit Theory Lab,ECE,Practical,1
+ECE703P,Digital Logic Lab,ECE,Practical,1
+ECE801T,Basic Electronics,ECE,Theory,4
+ECE802T,Circuit Theory,ECE,Theory,3
+ECE803T,Digital Logic,ECE,Theory,3
+ECE804T,Signals and Systems,ECE,Theory,2
+ECE805T,Microprocessors,ECE,Theory,3
+ECE801P,Basic Electronics Lab,ECE,Practical,1
+ECE802P,Circuit Theory Lab,ECE,Practical,1
+ECE803P,Digital Logic Lab,ECE,Practical,1
+ECE501T,Advanced VLSI,ECE,Theory,2
+ECE502T,Digital Signal Processing,ECE,Theory,3
+ECE503T,Wireless Communication,ECE,Theory,4
+ECE504T,Embedded AI,ECE,Theory,3
+ECE501P,Advanced VLSI Lab,ECE,Practical,1
+ECE502P,Digital Signal Processing Lab,ECE,Practical,1
+ECE601T,Advanced VLSI,ECE,Theory,3
+ECE602T,Digital Signal Processing,ECE,Theory,4
+ECE603T,Wireless Communication,ECE,Theory,3
+ECE604T,Embedded AI,ECE,Theory,3
+ECE601P,Advanced VLSI Lab,ECE,Practical,1
+ECE602P,Digital Signal Processing Lab,ECE,Practical,1
+ECE701T,Advanced VLSI,ECE,Theory,4
+ECE702T,Digital Signal Processing,ECE,Theory,3
+ECE703T,Wireless Communication,ECE,Theory,3
+ECE704T,Embedded AI,ECE,Theory,2
+ECE701P,Advanced VLSI Lab,ECE,Practical,1
+ECE702P,Digital Signal Processing Lab,ECE,Practical,1
+ECE801T,Advanced VLSI,ECE,Theory,3
+ECE802T,Digital Signal Processing,ECE,Theory,3
+ECE803T,Wireless Communication,ECE,Theory,2
+ECE804T,Embedded AI,ECE,Theory,3
+ECE801P,Advanced VLSI Lab,ECE,Practical,1
+ECE802P,Digital Signal Processing Lab,ECE,Practical,1
+ME101T,Engineering Mechanics,ME,Theory,3
+ME102T,Thermodynamics,ME,Theory,2
+ME103T,Fluid Mechanics,ME,Theory,3
+ME104T,Manufacturing Process,ME,Theory,4
+ME105T,Heat Transfer,ME,Theory,3
+ME101P,Engineering Mechanics Lab,ME,Practical,1
+ME102P,Thermodynamics Lab,ME,Practical,1
+ME103P,Fluid Mechanics Lab,ME,Practical,1
+ME201T,Engineering Mechanics,ME,Theory,4
+ME202T,Thermodynamics,ME,Theory,3
+ME203T,Fluid Mechanics,ME,Theory,3
+ME204T,Manufacturing Process,ME,Theory,2
+ME205T,Heat Transfer,ME,Theory,3
+ME201P,Engineering Mechanics Lab,ME,Practical,1
+ME202P,Thermodynamics Lab,ME,Practical,1
+ME203P,Fluid Mechanics Lab,ME,Practical,1
+ME301T,Engineering Mechanics,ME,Theory,2
+ME302T,Thermodynamics,ME,Theory,3
+ME303T,Fluid Mechanics,ME,Theory,4
+ME304T,Manufacturing Process,ME,Theory,3
+ME305T,Heat Transfer,ME,Theory,3
+ME301P,Engineering Mechanics Lab,ME,Practical,1
+ME302P,Thermodynamics Lab,ME,Practical,1
+ME303P,Fluid Mechanics Lab,ME,Practical,1
+ME401T,Engineering Mechanics,ME,Theory,3
+ME402T,Thermodynamics,ME,Theory,3
+ME403T,Fluid Mechanics,ME,Theory,2
+ME404T,Manufacturing Process,ME,Theory,3
+ME405T,Heat Transfer,ME,Theory,4
+ME401P,Engineering Mechanics Lab,ME,Practical,1
+ME402P,Thermodynamics Lab,ME,Practical,1
+ME403P,Fluid Mechanics Lab,ME,Practical,1
+ME501T,Engineering Mechanics,ME,Theory,3
+ME502T,Thermodynamics,ME,Theory,4
+ME503T,Fluid Mechanics,ME,Theory,3
+ME504T,Manufacturing Process,ME,Theory,3
+ME505T,Heat Transfer,ME,Theory,2
+ME501P,Engineering Mechanics Lab,ME,Practical,1
+ME502P,Thermodynamics Lab,ME,Practical,1
+ME503P,Fluid Mechanics Lab,ME,Practical,1
+ME601T,Engineering Mechanics,ME,Theory,3
+ME602T,Thermodynamics,ME,Theory,2
+ME603T,Fluid Mechanics,ME,Theory,3
+ME604T,Manufacturing Process,ME,Theory,4
+ME605T,Heat Transfer,ME,Theory,3
+ME601P,Engineering Mechanics Lab,ME,Practical,1
+ME602P,Thermodynamics Lab,ME,Practical,1
+ME603P,Fluid Mechanics Lab,ME,Practical,1
+ME701T,Engineering Mechanics,ME,Theory,4
+ME702T,Thermodynamics,ME,Theory,3
+ME703T,Fluid Mechanics,ME,Theory,3
+ME704T,Manufacturing Process,ME,Theory,2
+ME705T,Heat Transfer,ME,Theory,3
+ME701P,Engineering Mechanics Lab,ME,Practical,1
+ME702P,Thermodynamics Lab,ME,Practical,1
+ME703P,Fluid Mechanics Lab,ME,Practical,1
+ME801T,Engineering Mechanics,ME,Theory,2
+ME802T,Thermodynamics,ME,Theory,3
+ME803T,Fluid Mechanics,ME,Theory,4
+ME804T,Manufacturing Process,ME,Theory,3
+ME805T,Heat Transfer,ME,Theory,3
+ME801P,Engineering Mechanics Lab,ME,Practical,1
+ME802P,Thermodynamics Lab,ME,Practical,1
+ME803P,Fluid Mechanics Lab,ME,Practical,1
+ME501T,Advanced Thermodynamics,ME,Theory,3
+ME502T,Computational Fluid Dynamics,ME,Theory,3
+ME503T,Advanced Robotics,ME,Theory,2
+ME504T,Smart Manufacturing,ME,Theory,3
+ME501P,Advanced Thermodynamics Lab,ME,Practical,1
+ME502P,Computational Fluid Dynamics Lab,ME,Practical,1
+ME601T,Advanced Thermodynamics,ME,Theory,3
+ME602T,Computational Fluid Dynamics,ME,Theory,2
+ME603T,Advanced Robotics,ME,Theory,3
+ME604T,Smart Manufacturing,ME,Theory,4
+ME601P,Advanced Thermodynamics Lab,ME,Practical,1
+ME602P,Computational Fluid Dynamics Lab,ME,Practical,1
+ME701T,Advanced Thermodynamics,ME,Theory,2
+ME702T,Computational Fluid Dynamics,ME,Theory,3
+ME703T,Advanced Robotics,ME,Theory,4
+ME704T,Smart Manufacturing,ME,Theory,3
+ME701P,Advanced Thermodynamics Lab,ME,Practical,1
+ME702P,Computational Fluid Dynamics Lab,ME,Practical,1
+ME801T,Advanced Thermodynamics,ME,Theory,3
+ME802T,Computational Fluid Dynamics,ME,Theory,4
+ME803T,Advanced Robotics,ME,Theory,3
+ME804T,Smart Manufacturing,ME,Theory,3
+ME801P,Advanced Thermodynamics Lab,ME,Practical,1
+ME802P,Computational Fluid Dynamics Lab,ME,Practical,1
+BIO101T,Cell Biology,BIO,Theory,4
+BIO102T,Genetics,BIO,Theory,3
+BIO103T,Biochemistry,BIO,Theory,3
+BIO104T,Microbiology,BIO,Theory,2
+BIO105T,Immunology,BIO,Theory,3
+BIO101P,Cell Biology Lab,BIO,Practical,1
+BIO102P,Genetics Lab,BIO,Practical,1
+BIO103P,Biochemistry Lab,BIO,Practical,1
+BIO201T,Cell Biology,BIO,Theory,2
+BIO202T,Genetics,BIO,Theory,3
+BIO203T,Biochemistry,BIO,Theory,4
+BIO204T,Microbiology,BIO,Theory,3
+BIO205T,Immunology,BIO,Theory,3
+BIO201P,Cell Biology Lab,BIO,Practical,1
+BIO202P,Genetics Lab,BIO,Practical,1
+BIO203P,Biochemistry Lab,BIO,Practical,1
+BIO301T,Cell Biology,BIO,Theory,3
+BIO302T,Genetics,BIO,Theory,3
+BIO303T,Biochemistry,BIO,Theory,2
+BIO304T,Microbiology,BIO,Theory,3
+BIO305T,Immunology,BIO,Theory,4
+BIO301P,Cell Biology Lab,BIO,Practical,1
+BIO302P,Genetics Lab,BIO,Practical,1
+BIO303P,Biochemistry Lab,BIO,Practical,1
+BIO401T,Cell Biology,BIO,Theory,3
+BIO402T,Genetics,BIO,Theory,4
+BIO403T,Biochemistry,BIO,Theory,3
+BIO404T,Microbiology,BIO,Theory,3
+BIO405T,Immunology,BIO,Theory,2
+BIO401P,Cell Biology Lab,BIO,Practical,1
+BIO402P,Genetics Lab,BIO,Practical,1
+BIO403P,Biochemistry Lab,BIO,Practical,1
+BIO501T,Cell Biology,BIO,Theory,3
+BIO502T,Genetics,BIO,Theory,2
+BIO503T,Biochemistry,BIO,Theory,3
+BIO504T,Microbiology,BIO,Theory,4
+BIO505T,Immunology,BIO,Theory,3
+BIO501P,Cell Biology Lab,BIO,Practical,1
+BIO502P,Genetics Lab,BIO,Practical,1
+BIO503P,Biochemistry Lab,BIO,Practical,1
+BIO601T,Cell Biology,BIO,Theory,4
+BIO602T,Genetics,BIO,Theory,3
+BIO603T,Biochemistry,BIO,Theory,3
+BIO604T,Microbiology,BIO,Theory,2
+BIO605T,Immunology,BIO,Theory,3
+BIO601P,Cell Biology Lab,BIO,Practical,1
+BIO602P,Genetics Lab,BIO,Practical,1
+BIO603P,Biochemistry Lab,BIO,Practical,1
+BIO701T,Cell Biology,BIO,Theory,2
+BIO702T,Genetics,BIO,Theory,3
+BIO703T,Biochemistry,BIO,Theory,4
+BIO704T,Microbiology,BIO,Theory,3
+BIO705T,Immunology,BIO,Theory,3
+BIO701P,Cell Biology Lab,BIO,Practical,1
+BIO702P,Genetics Lab,BIO,Practical,1
+BIO703P,Biochemistry Lab,BIO,Practical,1
+BIO801T,Cell Biology,BIO,Theory,3
+BIO802T,Genetics,BIO,Theory,3
+BIO803T,Biochemistry,BIO,Theory,2
+BIO804T,Microbiology,BIO,Theory,3
+BIO805T,Immunology,BIO,Theory,4
+BIO801P,Cell Biology Lab,BIO,Practical,1
+BIO802P,Genetics Lab,BIO,Practical,1
+BIO803P,Biochemistry Lab,BIO,Practical,1
+BIO501T,Genomics,BIO,Theory,3
+BIO502T,Proteomics,BIO,Theory,4
+BIO503T,Advanced Bioinformatics,BIO,Theory,3
+BIO504T,Biostatistics,BIO,Theory,3
+BIO501P,Genomics Lab,BIO,Practical,1
+BIO502P,Proteomics Lab,BIO,Practical,1
+BIO601T,Genomics,BIO,Theory,4
+BIO602T,Proteomics,BIO,Theory,3
+BIO603T,Advanced Bioinformatics,BIO,Theory,3
+BIO604T,Biostatistics,BIO,Theory,2
+BIO601P,Genomics Lab,BIO,Practical,1
+BIO602P,Proteomics Lab,BIO,Practical,1
+BIO701T,Genomics,BIO,Theory,3
+BIO702T,Proteomics,BIO,Theory,3
+BIO703T,Advanced Bioinformatics,BIO,Theory,2
+BIO704T,Biostatistics,BIO,Theory,3
+BIO701P,Genomics Lab,BIO,Practical,1
+BIO702P,Proteomics Lab,BIO,Practical,1
+BIO801T,Genomics,BIO,Theory,3
+BIO802T,Proteomics,BIO,Theory,2
+BIO803T,Advanced Bioinformatics,BIO,Theory,3
+BIO804T,Biostatistics,BIO,Theory,4
+BIO801P,Genomics Lab,BIO,Practical,1
+BIO802P,Proteomics Lab,BIO,Practical,1
+MGT101T,Principles of Management,MGT,Theory,2
+MGT102T,Accounting,MGT,Theory,3
+MGT103T,Marketing,MGT,Theory,4
+MGT104T,Business Economics,MGT,Theory,3
+MGT105T,Finance,MGT,Theory,3
+MGT101P,Principles of Management Lab,MGT,Practical,1
+MGT102P,Accounting Lab,MGT,Practical,1
+MGT103P,Marketing Lab,MGT,Practical,1
+MGT201T,Principles of Management,MGT,Theory,3
+MGT202T,Accounting,MGT,Theory,3
+MGT203T,Marketing,MGT,Theory,2
+MGT204T,Business Economics,MGT,Theory,3
+MGT205T,Finance,MGT,Theory,4
+MGT201P,Principles of Management Lab,MGT,Practical,1
+MGT202P,Accounting Lab,MGT,Practical,1
+MGT203P,Marketing Lab,MGT,Practical,1
+MGT301T,Principles of Management,MGT,Theory,3
+MGT302T,Accounting,MGT,Theory,4
+MGT303T,Marketing,MGT,Theory,3
+MGT304T,Business Economics,MGT,Theory,3
+MGT305T,Finance,MGT,Theory,2
+MGT301P,Principles of Management Lab,MGT,Practical,1
+MGT302P,Accounting Lab,MGT,Practical,1
+MGT303P,Marketing Lab,MGT,Practical,1
+MGT401T,Principles of Management,MGT,Theory,3
+MGT402T,Accounting,MGT,Theory,2
+MGT403T,Marketing,MGT,Theory,3
+MGT404T,Business Economics,MGT,Theory,4
+MGT405T,Finance,MGT,Theory,3
+MGT401P,Principles of Management Lab,MGT,Practical,1
+MGT402P,Accounting Lab,MGT,Practical,1
+MGT403P,Marketing Lab,MGT,Practical,1
+MGT501T,Principles of Management,MGT,Theory,4
+MGT502T,Accounting,MGT,Theory,3
+MGT503T,Marketing,MGT,Theory,3
+MGT504T,Business Economics,MGT,Theory,2
+MGT505T,Finance,MGT,Theory,3
+MGT501P,Principles of Management Lab,MGT,Practical,1
+MGT502P,Accounting Lab,MGT,Practical,1
+MGT503P,Marketing Lab,MGT,Practical,1
+MGT601T,Principles of Management,MGT,Theory,2
+MGT602T,Accounting,MGT,Theory,3
+MGT603T,Marketing,MGT,Theory,4
+MGT604T,Business Economics,MGT,Theory,3
+MGT605T,Finance,MGT,Theory,3
+MGT601P,Principles of Management Lab,MGT,Practical,1
+MGT602P,Accounting Lab,MGT,Practical,1
+MGT603P,Marketing Lab,MGT,Practical,1
+MGT701T,Principles of Management,MGT,Theory,3
+MGT702T,Accounting,MGT,Theory,3
+MGT703T,Marketing,MGT,Theory,2
+MGT704T,Business Economics,MGT,Theory,3
+MGT705T,Finance,MGT,Theory,4
+MGT701P,Principles of Management Lab,MGT,Practical,1
+MGT702P,Accounting Lab,MGT,Practical,1
+MGT703P,Marketing Lab,MGT,Practical,1
+MGT801T,Principles of Management,MGT,Theory,3
+MGT802T,Accounting,MGT,Theory,4
+MGT803T,Marketing,MGT,Theory,3
+MGT804T,Business Economics,MGT,Theory,3
+MGT805T,Finance,MGT,Theory,2
+MGT801P,Principles of Management Lab,MGT,Practical,1
+MGT802P,Accounting Lab,MGT,Practical,1
+MGT803P,Marketing Lab,MGT,Practical,1
+MGT501T,Strategic Management,MGT,Theory,3
+MGT502T,Advanced Finance,MGT,Theory,2
+MGT503T,Business Analytics,MGT,Theory,3
+MGT504T,Leadership,MGT,Theory,4
+MGT501P,Strategic Management Lab,MGT,Practical,1
+MGT502P,Advanced Finance Lab,MGT,Practical,1
+MGT601T,Strategic Management,MGT,Theory,2
+MGT602T,Advanced Finance,MGT,Theory,3
+MGT603T,Business Analytics,MGT,Theory,4
+MGT604T,Leadership,MGT,Theory,3
+MGT601P,Strategic Management Lab,MGT,Practical,1
+MGT602P,Advanced Finance Lab,MGT,Practical,1
+MGT701T,Strategic Management,MGT,Theory,3
+MGT702T,Advanced Finance,MGT,Theory,4
+MGT703T,Business Analytics,MGT,Theory,3
+MGT704T,Leadership,MGT,Theory,3
+MGT701P,Strategic Management Lab,MGT,Practical,1
+MGT702P,Advanced Finance Lab,MGT,Practical,1
+MGT801T,Strategic Management,MGT,Theory,4
+MGT802T,Advanced Finance,MGT,Theory,3
+MGT803T,Business Analytics,MGT,Theory,3
+MGT804T,Leadership,MGT,Theory,2
+MGT801P,Strategic Management Lab,MGT,Practical,1
+MGT802P,Advanced Finance Lab,MGT,Practical,1

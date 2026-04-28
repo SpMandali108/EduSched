@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Timetable System - Complete</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #6366f1;
+            --color-secondary: #8b5cf6;
+            --color-accent: #ec4899;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-surface-light: #334155;
+            --color-text: #f1f5f9;
+            --color-text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-secondary);
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .tab-indicator {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: minmax(88px, 110px) repeat(5, minmax(0, 1fr));
+            gap: 3px;
+            background: var(--color-bg);
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .timetable-export-card {
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            min-width: 0;
+        }
+
+        .timetable-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            border-radius: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .timetable-time-cell {
+            background: #1f2937;
+            padding: 12px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .timetable-cell {
+            background: var(--color-surface);
+            padding: 14px;
+            min-height: 100px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+            overflow: hidden;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .timetable-cell:hover {
+            background: var(--color-surface-light);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .timetable-cell.theory {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .timetable-cell.practical {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .timetable-cell.break {
+            background: #374151;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timetable-cell.free {
+            background: rgba(31, 41, 55, 0.4);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .timetable-cell-title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            line-height: 1.2;
+        }
+
+        .timetable-cell-subtitle,
+        .timetable-cell-meta {
+            font-size: 0.75rem;
+            line-height: 1.25;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--color-primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        .tab-btn.active {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="glass fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">TimeTable<span class="text-indigo-400">Pro</span></h1>
+                        <p class="text-xs text-gray-400">Complete System</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="statusIndicator" class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-sm text-gray-400">Connected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-6">
+        <div class="container mx-auto max-w-7xl">
+            
+            <!-- Navigation Tabs -->
+            <div class="mb-8">
+                <div class="flex space-x-1 bg-slate-800 p-1 rounded-xl relative">
+                    <div id="tabIndicator" class="tab-indicator absolute h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg transition-all duration-300"></div>
+                    <button onclick="switchTab('dashboard')" class="tab-btn flex-1 px-6 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors relative z-10" data-tab="dashboard">
+                        Dashboard
+                    </button>
+                    <button onclick="switchTab('data-entry')" class="tab-btn flex-1 px-6 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors relative z-10" data-tab="data-entry">
+                        Data Entry
+                    </button>
+                    <button onclick="switchTab('timetable')" class="tab-btn flex-1 px-6 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors relative z-10" data-tab="timetable">
+                        Timetable
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tabContent">
+                
+                <!-- Dashboard Tab -->
+                <div id="dashboard-content" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div onclick="viewDataModal('classrooms')" class="glass rounded-2xl p-6 card-hover">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-gray-400 text-sm font-medium">Classrooms</h3>
+                                <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="classroomCount" class="text-3xl font-bold text-white">0</p>
+                            <p class="text-xs text-gray-500 mt-1">Click to view records</p>
+                        </div>
+
+                        <div onclick="viewDataModal('subjects')" class="glass rounded-2xl p-6 card-hover">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-gray-400 text-sm font-medium">Subjects</h3>
+                                <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="subjectCount" class="text-3xl font-bold text-white">0</p>
+                            <p class="text-xs text-gray-500 mt-1">Click to view records</p>
+                        </div>
+
+                        <div onclick="viewDataModal('faculty')" class="glass rounded-2xl p-6 card-hover">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-gray-400 text-sm font-medium">Faculty</h3>
+                                <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="facultyCount" class="text-3xl font-bold text-white">0</p>
+                            <p class="text-xs text-gray-500 mt-1">Click to view records</p>
+                        </div>
+
+                        <div onclick="viewDataModal('students')" class="glass rounded-2xl p-6 card-hover">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-gray-400 text-sm font-medium">Student Groups</h3>
+                                <div class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="studentGroupCount" class="text-3xl font-bold text-white">0</p>
+                            <p class="text-xs text-gray-500 mt-1">Click to view records</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="glass rounded-2xl p-8">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                            <h2 class="text-2xl font-bold">University Controls</h2>
+                            <div class="flex items-center space-x-3 bg-slate-800 p-1.5 rounded-xl border border-slate-700">
+                                <span class="text-xs font-bold text-gray-400 px-2 uppercase tracking-wider">Mode:</span>
+                                <select id="semesterMode" class="bg-slate-700 border-none rounded-lg text-xs font-bold text-white py-1.5 px-3 focus:ring-0">
+                                    <option value="odd">Odd Semester (1,3,5,7)</option>
+                                    <option value="even">Even Semester (2,4,6)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <button onclick="loadSampleData()" class="btn px-6 py-4 bg-slate-800 text-white rounded-xl font-medium border border-slate-700 hover:bg-slate-700 transition-all">
+                                📥 Load Sample CSVs
+                            </button>
+                            <button onclick="syncFacultyAssignments()" class="btn px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium shadow-lg hover:shadow-blue-500/20 transition-all">
+                                🔄 Sync Faculty Data
+                            </button>
+                            <button onclick="generateTimetable()" class="btn px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-green-500/20 transition-all">
+                                ⚡ Generate Timetable
+                            </button>
+                            <button onclick="resetAllData()" class="btn px-6 py-4 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-medium shadow-lg hover:shadow-red-500/20 transition-all">
+                                🗑️ Reset All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Entry Tab -->
+                <div id="data-entry-content" class="tab-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="glass rounded-2xl p-6">
+                            <h3 class="text-lg font-bold mb-4">Data Categories</h3>
+                            <div class="space-y-2">
+                                <button onclick="showDataForm('classrooms')" class="data-form-btn w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors text-gray-300">
+                                    🏫 Classrooms
+                                </button>
+                                <button onclick="showDataForm('subjects')" class="data-form-btn w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors text-gray-300">
+                                    📚 Subjects
+                                </button>
+                                <button onclick="showDataForm('faculty')" class="data-form-btn w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors text-gray-300">
+                                    👨‍🏫 Faculty
+                                </button>
+                                <button onclick="showDataForm('students')" class="data-form-btn w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors text-gray-300">
+                                    👥 Students
+                                </button>
+                                <button onclick="showDataForm('timing')" class="data-form-btn w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors text-gray-300">
+                                    ⏰ Timing & Hours
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2">
+                            <div id="dataFormContainer" class="glass rounded-2xl p-8">
+                                <div class="text-center text-gray-400 py-12">
+                                    <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <p>Select a category to add or manage data</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timetable Tab -->
+                <div id="timetable-content" class="tab-content hidden">
+                    <div class="glass rounded-2xl p-8 mb-6">
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                            <h2 class="text-2xl font-bold">Timetable Viewer</h2>
+                            <div class="flex flex-wrap gap-4">
+                                <select id="timetableType" onchange="loadTimetableOptions()" class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                    <option value="">Select Type</option>
+                                    <option value="student">Student Timetable</option>
+                                    <option value="faculty">Faculty Timetable</option>
+                                    <option value="classroom">Classroom Timetable</option>
+                                </select>
+                                <select id="timetableEntity" class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                    <option value="">Select Entity</option>
+                                </select>
+                                <button onclick="viewSelectedTimetable()" class="btn px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-medium">
+                                    View Timetable
+                                </button>
+                                <button id="downloadTimetableBtn" onclick="downloadTimetableAsImage()" disabled class="btn px-6 py-2 bg-gradient-to-r from-sky-500 to-cyan-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Download Photo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="timetableDisplay" class="overflow-x-auto">
+                            <div class="text-center text-gray-400 py-12">
+                                <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p>Select a timetable to view</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Data View Modal -->
+    <div id="dataModal" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="glass rounded-2xl max-w-6xl w-full max-h-[80vh] overflow-hidden">
+            <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+                <h3 id="modalTitle" class="text-2xl font-bold"></h3>
+                <button onclick="closeDataModal()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent" class="p-6 overflow-y-auto max-h-[calc(80vh-100px)]">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="glass rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+                <h3 id="editModalTitle" class="text-2xl font-bold">Edit Item</h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="editModalForm" class="p-6 overflow-y-auto max-h-[calc(80vh-100px)]"></form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center">
+        <div class="glass rounded-2xl p-8 text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <p id="loadingText" class="text-lg font-medium">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-32 transition-transform duration-300 z-50">
+        <div id="toastContent" class="glass rounded-xl px-6 py-4 flex items-center space-x-3 shadow-2xl">
+            <div id="toastIcon"></div>
+            <p id="toastMessage" class="font-medium"></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="{{ url_for('static', filename='JS/app_runtime_v2.js') }}?v={{ range(1, 1000) | random }}"></script>
+</body>
+</html>

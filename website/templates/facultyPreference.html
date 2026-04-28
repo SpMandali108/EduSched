@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Assignment Dashboard</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #f4f6f9;
+        color: #1a1a2e;
+        min-height: 100vh;
+        padding: 0;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      /* ── TOP BAR ── */
+      .topbar {
+        background: #fff;
+        border-bottom: 1px solid #e8ecf0;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .page-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0d1b2a;
+      }
+      .page-breadcrumb {
+        font-size: 12px;
+        color: #8a96a3;
+        margin-top: 2px;
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .badge {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+
+      .badge-blue {
+        background: #e6f1fb;
+        color: #185fa5;
+      }
+      .badge-green {
+        background: #eaf3de;
+        color: #3b6d11;
+      }
+      .badge-amber {
+        background: #faeeda;
+        color: #854f0b;
+      }
+      .badge-red {
+        background: #fcebeb;
+        color: #a32d2d;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        padding: 24px 28px;
+        flex: 1;
+      }
+
+      /* ── STATS ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .stat-card {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e8ecf0;
+        padding: 16px 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .stat-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .si-blue {
+        background: #e6f1fb;
+      }
+      .si-blue svg {
+        fill: #185fa5;
+      }
+      .si-teal {
+        background: #e1f5ee;
+      }
+      .si-teal svg {
+        fill: #0f6e56;
+      }
+      .si-amber {
+        background: #faeeda;
+      }
+      .si-amber svg {
+        fill: #854f0b;
+      }
+      .si-red {
+        background: #fcebeb;
+      }
+      .si-red svg {
+        fill: #a32d2d;
+      }
+
+      .stat-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #8a96a3;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 5px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0d1b2a;
+        line-height: 1;
+      }
+      .stat-sub {
+        font-size: 11px;
+        color: #8a96a3;
+        margin-top: 4px;
+      }
+
+      /* ── PANEL ── */
+      .panel {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e8ecf0;
+        overflow: hidden;
+      }
+
+      .panel-header {
+        padding: 14px 18px;
+        border-bottom: 1px solid #e8ecf0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .panel-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0d1b2a;
+      }
+      .panel-sub {
+        font-size: 12px;
+        color: #8a96a3;
+        margin-top: 2px;
+      }
+
+      /* ── CONTROLS ── */
+      .controls-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .ctrl-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .ctrl-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #8a96a3;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      select,
+      input[type="text"] {
+        font-family: inherit;
+        font-size: 12px;
+        height: 32px;
+        padding: 0 10px;
+        border-radius: 7px;
+        border: 1px solid #dde1e7;
+        background: #f8f9fb;
+        color: #0d1b2a;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+
+      select:focus,
+      input[type="text"]:focus {
+        border-color: #185fa5;
+        background: #fff;
+      }
+
+      .search-wrap {
+        position: relative;
+      }
+
+      .search-wrap input {
+        padding-left: 30px;
+        width: 200px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 9px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 13px;
+        height: 13px;
+        fill: #8a96a3;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 32px;
+        padding: 0 14px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      .btn-primary {
+        background: #185fa5;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #0c447c;
+      }
+
+      .btn-secondary {
+        background: #f4f6f9;
+        color: #3a4a5c;
+        border: 1px solid #dde1e7;
+      }
+
+      .btn-secondary:hover {
+        background: #e8ecf0;
+      }
+
+      /* ── TABLE ── */
+      .table-scroll {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        min-width: 700px;
+      }
+
+      thead tr {
+        border-bottom: 1px solid #e8ecf0;
+        background: #f8f9fb;
+      }
+
+      th {
+        padding: 10px 14px;
+        text-align: left;
+        font-size: 10px;
+        font-weight: 700;
+        color: #8a96a3;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+
+      td {
+        padding: 11px 14px;
+        color: #1a1a2e;
+        border-bottom: 1px solid #f0f2f5;
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: #f8f9fb;
+      }
+
+      .cell-mono {
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 12px;
+        color: #4a5568;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .pill-theory {
+        background: #e6f1fb;
+        color: #185fa5;
+      }
+      .pill-practical {
+        background: #eaf3de;
+        color: #3b6d11;
+      }
+      .pill-unassigned {
+        background: #fcebeb;
+        color: #a32d2d;
+      }
+
+      .unassigned-text {
+        color: #a32d2d;
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      .btn-view {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #185fa5;
+        background: #e6f1fb;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        font-family: inherit;
+        transition: background 0.15s;
+      }
+
+      .btn-view:hover {
+        background: #b5d4f4;
+      }
+
+      .btn-view svg {
+        width: 11px;
+        height: 11px;
+        fill: #185fa5;
+      }
+
+      /* ── FOOTER ── */
+      .table-footer {
+        padding: 11px 16px;
+        border-top: 1px solid #e8ecf0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8f9fb;
+      }
+
+      .footer-info {
+        font-size: 12px;
+        color: #8a96a3;
+      }
+
+      .pg-btns {
+        display: flex;
+        gap: 6px;
+      }
+
+      .pg-btn {
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid #dde1e7;
+        background: #fff;
+        color: #3a4a5c;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .pg-btn:hover {
+        background: #f4f6f9;
+      }
+
+      /* ── EMPTY ── */
+      .empty-state {
+        padding: 56px 0;
+        text-align: center;
+      }
+
+      .empty-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: #f4f6f9;
+        margin: 0 auto 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .empty-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: #8a96a3;
+      }
+      .empty-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #3a4a5c;
+        margin-bottom: 4px;
+      }
+      .empty-sub {
+        font-size: 12px;
+        color: #8a96a3;
+      }
+
+      /* ── DIVIDER ── */
+      .divider {
+        width: 1px;
+        height: 18px;
+        background: #e8ecf0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- MAIN -->
+      <div class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+          <div style="display: flex; align-items: center; gap: 14px">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                background: #185fa5;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+              "
+            >
+              <svg
+                viewBox="0 0 20 20"
+                style="width: 16px; height: 16px; fill: white"
+              >
+                <rect x="2" y="2" width="7" height="7" rx="1.5" />
+                <rect x="11" y="2" width="7" height="7" rx="1.5" />
+                <rect x="2" y="11" width="7" height="7" rx="1.5" />
+                <rect x="11" y="11" width="7" height="7" rx="1.5" />
+              </svg>
+            </div>
+            <div>
+              <div class="page-title">Faculty Assignment Dashboard</div>
+              <div class="page-breadcrumb">Academic Resource Management</div>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <span class="badge badge-blue">AY 2025–26</span>
+            <span class="badge badge-green" id="semBadge">Odd Semester</span>
+          </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+          <!-- STATS -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon si-blue">
+                <svg viewBox="0 0 20 20">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Total Entries</div>
+                <div class="stat-value" id="totalEntries">—</div>
+                <div class="stat-sub">All assignments</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon si-teal">
+                <svg viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Lab Sessions</div>
+                <div class="stat-value" id="totalLabs">—</div>
+                <div class="stat-sub">Practical type</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon si-amber">
+                <svg viewBox="0 0 20 20">
+                  <path
+                    d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
+                  />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Faculty Assigned</div>
+                <div class="stat-value" id="totalFaculty">—</div>
+                <div class="stat-sub">Unique members</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon si-red">
+                <svg viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Unassigned</div>
+                <div class="stat-value" id="totalUnassigned">—</div>
+                <div class="stat-sub">Need attention</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLE PANEL -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Assignment Records</div>
+                <div class="panel-sub">
+                  Configure filters and generate to view assignments
+                </div>
+              </div>
+
+              <div class="controls-row">
+                <div class="ctrl-group">
+                  <span class="ctrl-label">Sem</span>
+                  <select id="semType" onchange="updateSemBadge()">
+                    <option value="odd">Odd</option>
+                    <option value="even">Even</option>
+                  </select>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="ctrl-group">
+                  <span class="ctrl-label">Dept</span>
+                  <select id="dept">
+                    <option value="">All</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="ME">ME</option>
+                    <option value="BIO">BIO</option>
+                    <option value="MGT">MGT</option>
+                  </select>
+                </div>
+
+                <div class="ctrl-group">
+                  <span class="ctrl-label">Course</span>
+                  <select id="course">
+                    <option value="">All</option>
+                    <option value="UG">UG</option>
+                    <option value="PG">PG</option>
+                  </select>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="search-wrap">
+                  <svg class="search-icon" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    type="text"
+                    id="search"
+                    placeholder="Search..."
+                    oninput="filterTable()"
+                  />
+                </div>
+
+                <button class="btn btn-primary" onclick="generate()">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Generate
+                </button>
+
+                <button class="btn btn-secondary" onclick="exportCSV()">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Export
+                </button>
+                <button class="btn btn-secondary" onclick="exportFacultySummary()">
+  Faculty Summary
+</button>
+              </div>
+            </div>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Division</th>
+                    <th>Subject ID</th>
+                    <th>Subject Name</th>
+                    <th>Faculty ID</th>
+                    <th>Faculty Name</th>
+                    <th>Type</th>
+                    <th>Credits</th>
+                    <th>Assigned Hrs</th>
+                    <!-- NEW -->
+                    <th>Max Hrs</th>
+                    <!-- NEW -->
+                    <th>Profile</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <tr>
+                    <td colspan="11">
+                      <div class="empty-state">
+                        <div class="empty-icon">
+                          <svg viewBox="0 0 20 20">
+                            <path
+                              fill-rule="evenodd"
+                              d="M3 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm8-8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <div class="empty-title">No data loaded</div>
+                        <div class="empty-sub">
+                          Select your filters above and click Generate
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer">
+              <span class="footer-info" id="pgInfo">No records loaded</span>
+              <div class="pg-btns">
+                <button class="pg-btn" onclick="prevPage()">
+                  &#8592; Previous
+                </button>
+                <button class="pg-btn" onclick="nextPage()">
+                  Next &#8594;
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /content -->
+      </div>
+      <!-- /main -->
+    </div>
+    <!-- /layout -->
+
+    <script>
+let fullData = [];
+let filteredData = [];
+let currentPage = 1;
+const PAGE_SIZE = 15;
+
+async function generate() {
+  try {
+    const sem = document.getElementById('semType').value;
+    const dept = document.getElementById('dept').value;
+    const course = document.getElementById('course').value;
+
+    const res = await fetch(`/generate-assignment?sem=${sem}&dept=${dept}&course=${course}`);
+    const data = await res.json();
+
+    console.log("API:", data);
+
+    // ✅ FIX
+    fullData = data.assignments || [];
+    filteredData = fullData;
+
+    currentPage = 1;
+
+    renderPage();
+    updateStats();
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderPage() {
+  const body = document.getElementById('tableBody');
+
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageData = filteredData.slice(start, start + PAGE_SIZE);
+
+  // =========================
+  // EMPTY STATE
+  // =========================
+  if (!filteredData.length) {
+    body.innerHTML = `
+      <tr>
+        <td colspan="11">No data</td>
+      </tr>
+    `;
+
+    document.getElementById('pgInfo').textContent = "No records found";
+    return;
+  }
+
+  // =========================
+  // RENDER TABLE
+  // =========================
+  body.innerHTML = pageData.map((row, i) => {
+
+    const division = `${row.course_id}_${row.semester}_${row.division}`;
+
+    const profileBtn = row.faculty_id
+      ? `<a href="/faculty/${row.faculty_id}" class="btn-view">View</a>`
+      : `—`;
+
+    return `
+      <tr>
+        <td>${start + i + 1}</td>
+        <td>${division}</td>
+        <td>${row.subject_id}</td>
+        <td>${row.subject_name}</td>
+        <td>${row.faculty_id || '—'}</td>
+        <td>${row.faculty_name || 'Unassigned'}</td>
+        <td>${row.type}</td>
+        <td>${row.credits ?? 0}</td>
+        <td>${row.assigned_hours ?? 0}</td>
+        <td>${row.max_hours ?? 0}</td>
+        <td>${profileBtn}</td>
+      </tr>
+    `;
+  }).join('');
+
+  // =========================
+  // PAGINATION INFO (FIXED)
+  // =========================
+  document.getElementById('pgInfo').textContent =
+    `Showing ${start + 1} - ${start + pageData.length} of ${filteredData.length}`;
+}
+function generateInsights() {
+
+  const facultyLoad = {};
+
+  fullData.forEach(r => {
+    if (!r.faculty_id) return;
+
+    if (!facultyLoad[r.faculty_name]) {
+      facultyLoad[r.faculty_name] = 0;
+    }
+
+    facultyLoad[r.faculty_name] += r.assigned_hours || 0;
+  });
+
+  const sorted = Object.entries(facultyLoad)
+    .sort((a, b) => b[1] - a[1]);
+
+  const top = sorted.slice(0, 5);
+  const bottom = sorted.slice(-5);
+
+  console.log("🔥 TOP LOADED FACULTY:", top);
+  console.log("🧊 LEAST LOADED:", bottom);
+
+  alert(
+    `Top Faculty:\n` +
+    top.map(x => `${x[0]}: ${x[1]} hrs`).join("\n")
+  );
+}
+
+function updateStats() {
+  document.getElementById('totalEntries').textContent = fullData.length;
+
+  const labs = fullData.filter(r => r.type === "practical").length;
+  document.getElementById('totalLabs').textContent = labs;
+
+  const facultySet = new Set(
+    fullData.map(r => r.faculty_id).filter(Boolean)
+  );
+  document.getElementById('totalFaculty').textContent = facultySet.size;
+
+  const unassigned = fullData.filter(r => !r.faculty_id).length;
+  document.getElementById('totalUnassigned').textContent = unassigned;
+}
+
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderPage();
+  }
+}
+
+function nextPage() {
+  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderPage();
+  }
+
+  
+}
+function updateSemBadge() {
+  const sem = document.getElementById("semType").value;
+  document.getElementById("semBadge").textContent =
+    sem === "odd" ? "Odd Semester" : "Even Semester";
+}
+function exportCSV() {
+  if (!fullData.length) {
+    alert("No data to export");
+    return;
+  }
+
+  // =========================
+  // CALCULATE TOTAL HOURS PER FACULTY
+  // =========================
+  const facultyHours = {};
+
+  fullData.forEach(row => {
+    const fid = row.faculty_id || "UNASSIGNED";
+
+    if (!facultyHours[fid]) {
+      facultyHours[fid] = 0;
+    }
+
+    // 🔥 IMPORTANT: use actual task hours, not cumulative
+    const hours = row.type === "practical"
+      ? (row.credits || 0) * 2
+      : (row.credits || 0);
+
+    facultyHours[fid] += hours;
+  });
+
+  // =========================
+  // CSV HEADERS
+  // =========================
+  const headers = [
+    "#",
+    "Division",
+    "Subject ID",
+    "Subject Name",
+    "Faculty ID",
+    "Faculty Name",
+    "Type",
+    "Credits",
+    "Assigned Hrs",
+    "Max Hrs",
+    "Total Faculty Hours"   // 🔥 NEW COLUMN
+  ];
+
+  let csv = headers.join(",") + "\n";
+
+  // =========================
+  // BUILD ROWS
+  // =========================
+  fullData.forEach((row, i) => {
+    const division = `${row.course_id}_${row.semester}_${row.division}`;
+    const fid = row.faculty_id || "UNASSIGNED";
+
+    const totalHours = facultyHours[fid] || 0;
+
+    const values = [
+      i + 1,
+      division,
+      row.subject_id,
+      row.subject_name,
+      fid,
+      row.faculty_name || "Unassigned",
+      row.type,
+      row.credits || 0,
+      row.assigned_hours || 0,
+      row.max_hours || 0,
+      totalHours   // 🔥 NEW VALUE
+    ];
+
+    csv += values.join(",") + "\n";
+  });
+
+  // =========================
+  // DOWNLOAD
+  // =========================
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "faculty_assignments.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function exportFacultySummary() {
+  if (!fullData.length) {
+    alert("No data to export");
+    return;
+  }
+
+  // =========================
+  // BUILD FACULTY SUMMARY
+  // =========================
+  const facultyMap = {};
+
+  fullData.forEach(row => {
+    const fid = row.faculty_id || "UNASSIGNED";
+
+    if (!facultyMap[fid]) {
+      facultyMap[fid] = {
+        faculty_id: fid,
+        faculty_name: row.faculty_name || "Unassigned",
+        max_hours: row.max_hours || 0,
+        assigned: 0
+      };
+    }
+
+    // calculate actual hours per task
+    const hours = row.type === "practical"
+      ? (row.credits || 0) * 2
+      : (row.credits || 0);
+
+    facultyMap[fid].assigned += hours;
+  });
+
+  // =========================
+  // CSV HEADERS
+  // =========================
+  const headers = [
+    "Faculty ID",
+    "Faculty Name",
+    "Max Hours / Week",
+    "Assigned Load (hrs)",
+    "Utilisation (%)"
+  ];
+
+  let csv = headers.join(",") + "\n";
+
+  // =========================
+  // BUILD ROWS
+  // =========================
+  Object.values(facultyMap).forEach(f => {
+    const utilisation = f.max_hours
+      ? ((f.assigned / f.max_hours) * 100).toFixed(1)
+      : 0;
+
+    const row = [
+      f.faculty_id,
+      f.faculty_name,
+      f.max_hours,
+      f.assigned,
+      utilisation
+    ];
+
+    csv += row.join(",") + "\n";
+  });
+
+  // =========================
+  // DOWNLOAD
+  // =========================
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "faculty_summary.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function filterTable() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const dept = document.getElementById('dept').value;
+  const course = document.getElementById('course').value;
+
+  filteredData = fullData.filter(row => {
+
+    const matchesSearch =
+      row.subject_name?.toLowerCase().includes(search) ||
+      row.faculty_name?.toLowerCase().includes(search) ||
+      row.subject_id?.toLowerCase().includes(search);
+
+    const matchesDept = !dept || row.department === dept;
+
+    const matchesCourse = !course || row.course_id?.includes(course);
+
+    return matchesSearch && matchesDept && matchesCourse;
+  });
+
+  currentPage = 1;
+  renderPage();
+}
+</script>
+  </body>
+</html>
