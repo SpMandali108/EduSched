@@ -1,5 +1,4 @@
 """
-<<<<<<< HEAD
 Advanced University Timetable Generator
 Implements compact scheduling with strict subject/day constraints.
 """
@@ -11,19 +10,6 @@ from collections import defaultdict
 
 class ConstraintViolation(Exception):
     """Custom exception for constraint violations."""
-=======
-Flask-friendly timetable generator.
-Ported from SMIT folder (FastAPI/Async) to Flask (Sync) with batch support and lenient continuity.
-"""
-
-import copy
-from collections import defaultdict
-from datetime import datetime
-
-
-class ConstraintViolation(Exception):
-    """Raised when strict timetable constraints cannot be satisfied."""
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
 
 
 class TimetableGenerator:
@@ -52,7 +38,6 @@ class TimetableGenerator:
 
         self.subject_priority = {}
         self.daily_slot_usage = defaultdict(lambda: defaultdict(set))
-<<<<<<< HEAD
         self.generation_warnings = []
 
     async def generate(self, params):
@@ -63,19 +48,6 @@ class TimetableGenerator:
         await self._load_data()
 
         validation_result = await self._validate_data()
-=======
-        self.division_day_has_lab = defaultdict(set)  # division_id -> set of days
-        self.generation_warnings = []
-
-    def generate(self, params):
-        """Main generation method (Sync version)."""
-        print("Starting advanced timetable generation (Flask Sync)...")
-        self._reset_generation_state()
-
-        self._load_data()
-
-        validation_result = self._validate_data()
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         if not validation_result["valid"]:
             return {
                 "success": False,
@@ -88,11 +60,7 @@ class TimetableGenerator:
 
         try:
             self._calculate_subject_priorities()
-<<<<<<< HEAD
             generated_timetables = await self._generate_timetables_smart()
-=======
-            generated_timetables = self._generate_timetables_smart()
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             if not generated_timetables:
                 return {
                     "success": False,
@@ -100,17 +68,10 @@ class TimetableGenerator:
                     "warnings": self.generation_warnings,
                     "message": "Could not generate conflict-free timetable",
                 }
-<<<<<<< HEAD
             await self._save_timetables(generated_timetables)
             return {
                 "success": True,
                 "message": "Timetables generated successfully with compact scheduling",
-=======
-            self._save_timetables(generated_timetables)
-            return {
-                "success": True,
-                "message": "Timetables generated successfully with advanced scheduling",
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                 "timetables_count": len(generated_timetables),
                 "timetables": generated_timetables,
                 "warnings": self.generation_warnings,
@@ -123,11 +84,6 @@ class TimetableGenerator:
                 "message": "Could not generate conflict-free timetable",
             }
         except Exception as exc:
-<<<<<<< HEAD
-=======
-            import traceback
-            traceback.print_exc()
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             return {
                 "success": False,
                 "error": str(exc),
@@ -135,7 +91,6 @@ class TimetableGenerator:
                 "message": "Timetable generation failed",
             }
 
-<<<<<<< HEAD
     async def _load_data(self):
         self.classrooms = await self.db.classrooms.find({}).to_list(1000)
         self.subjects = await self.db.subjects.find({}).to_list(2000)
@@ -144,17 +99,6 @@ class TimetableGenerator:
         self.timing_config = await self.db.timing_config.find_one({"config_id": "default"})
 
     async def _validate_data(self) -> Dict:
-=======
-    def _load_data(self):
-        self.classrooms = list(self.db.classrooms.find({}))
-        self.subjects = list(self.db.subjects.find({}))
-        self.faculty = list(self.db.faculty.find({}))
-        self.student_groups = list(self.db.student_groups.find({}))
-        self.faculty_assignments = list(self.db.faculty_assignments.find({}))
-        self.timing_config = self.db.timing_config.find_one({"config_id": "default"})
-
-    def _validate_data(self):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         errors = []
 
         if not self.timing_config:
@@ -194,7 +138,6 @@ class TimetableGenerator:
         return {"valid": len(errors) == 0, "errors": errors}
 
     def _filter_data(self, params):
-<<<<<<< HEAD
         if params.branches:
             self.subjects = [s for s in self.subjects if s["branch"] in params.branches]
             self.student_groups = [g for g in self.student_groups if g["branch"] in params.branches]
@@ -208,21 +151,6 @@ class TimetableGenerator:
         Create unique internal schedule keys.
         Some CSV rows reuse the same subject code, which breaks dict-based scheduling.
         """
-=======
-        branches = params.get("branches")
-        if branches:
-            self.subjects = [s for s in self.subjects if s["branch"] in branches]
-            self.student_groups = [g for g in self.student_groups if g["branch"] in branches]
-
-        semesters = params.get("semesters")
-        if semesters:
-            # Handle list of strings vs list of ints
-            semesters = [int(s) for s in semesters]
-            self.subjects = [s for s in self.subjects if s["semester"] in semesters]
-            self.student_groups = [g for g in self.student_groups if g["semester"] in semesters]
-
-    def _prepare_subject_instances(self):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         prepared_subjects = []
         seen = defaultdict(int)
 
@@ -253,11 +181,7 @@ class TimetableGenerator:
 
             self.subject_priority[subject["schedule_key"]] = priority
 
-<<<<<<< HEAD
     async def _generate_timetables_smart(self) -> List[Dict]:
-=======
-    def _generate_timetables_smart(self):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         timetables = []
         student_timetables = []
 
@@ -285,11 +209,7 @@ class TimetableGenerator:
                 student_count = division["student_count"]
 
                 try:
-<<<<<<< HEAD
                     timetable = await self._generate_division_timetable_continuous(
-=======
-                    timetable = self._generate_division_timetable_continuous(
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                         division_id,
                         branch,
                         semester,
@@ -315,7 +235,6 @@ class TimetableGenerator:
 
         return timetables
 
-<<<<<<< HEAD
     async def _generate_division_timetable_continuous(
         self,
         division_id: str,
@@ -325,52 +244,17 @@ class TimetableGenerator:
         subjects: List[Dict],
         student_count: int,
     ) -> Dict:
-=======
-    def _generate_division_timetable_continuous(
-        self,
-        division_id,
-        branch,
-        semester,
-        division_name,
-        subjects,
-        student_count,
-    ):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         entries = []
         working_days = self.timing_config["working_days"]
         time_slots = self.timing_config["time_slots"]
 
         for day in working_days:
-<<<<<<< HEAD
             for slot in time_slots:
                 entry_type = "break" if slot.get("is_break") else "empty"
                 entries.append({"day": day, "slot_id": slot["slot_id"], "entry_type": entry_type})
 
         try:
             requirements = {subject["schedule_key"]: subject["credits"] for subject in subjects}
-=======
-            teaching_slots_in_row = 0
-            for slot in time_slots:
-                # Determine if this slot should be a break
-                is_config_break = slot.get("is_break", False)
-                
-                if is_config_break:
-                    entry_type = "break"
-                    teaching_slots_in_row = 0
-                else:
-                    teaching_slots_in_row += 1
-                    if teaching_slots_in_row > 4:
-                        # Force a break after 4 slots
-                        entry_type = "break"
-                        teaching_slots_in_row = 0
-                    else:
-                        entry_type = "empty"
-                
-                entries.append({"day": day, "slot_id": slot["slot_id"], "entry_type": entry_type})
-
-        try:
-            requirements = {subject["schedule_key"]: subject.get("credits", 0) for subject in subjects}
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             self._validate_division_capacity(subjects, student_count, division_id, working_days, time_slots)
 
             scheduled_entries, unscheduled = self._schedule_continuous_smart(
@@ -402,7 +286,6 @@ class TimetableGenerator:
 
     def _build_student_timetable(
         self,
-<<<<<<< HEAD
         division_id: str,
         branch: str,
         semester: int,
@@ -410,15 +293,6 @@ class TimetableGenerator:
         entries: List[Dict],
         warnings: List[str],
     ) -> Dict:
-=======
-        division_id,
-        branch,
-        semester,
-        division_name,
-        entries,
-        warnings,
-    ):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         return {
             "timetable_id": f"STUDENT_{division_id}",
             "entity_type": "student",
@@ -435,37 +309,20 @@ class TimetableGenerator:
 
     def _validate_division_capacity(
         self,
-<<<<<<< HEAD
         subjects: List[Dict],
         student_count: int,
         division_id: str,
         working_days: List[str],
         time_slots: List[Dict],
-=======
-        subjects,
-        student_count,
-        division_id,
-        working_days,
-        time_slots,
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
     ):
         available_slots = len([slot for slot in time_slots if not slot.get("is_break")]) * len(working_days)
         required_slots = 0
 
         for subject in subjects:
-<<<<<<< HEAD
             credits = subject["credits"]
             if subject["subject_type"] == "Practical":
                 required_slots += credits * self.timing_config.get("practical_duration_slots", 2)
             else:
-=======
-            credits = subject.get("credits", 0)
-            if subject.get("subject_type") == "Practical":
-                # 1 credit = 2 slots (2 hours) as per user requirement
-                required_slots += credits * 2
-            else:
-                # 1 credit = 1 slot (1 hour)
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                 required_slots += credits
 
         if required_slots > available_slots:
@@ -475,7 +332,6 @@ class TimetableGenerator:
 
     def _schedule_continuous_smart(
         self,
-<<<<<<< HEAD
         division_id: str,
         subjects: List[Dict],
         requirements: Dict,
@@ -488,60 +344,26 @@ class TimetableGenerator:
         for day in working_days:
             for slot in time_slots:
                 if not slot.get("is_break"):
-=======
-        division_id,
-        subjects,
-        requirements,
-        entries,
-        working_days,
-        time_slots,
-        student_count,
-    ):
-        # Build a map of available slots for this division (excluding breaks)
-        slots_by_day = defaultdict(list)
-        break_slots = {(e["day"], e["slot_id"]) for e in entries if e["entry_type"] == "break"}
-        
-        for day in working_days:
-            for slot in time_slots:
-                if (day, slot["slot_id"]) not in break_slots:
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                     slots_by_day[day].append(slot)
 
         scheduled_count = {key: 0 for key in requirements}
         subject_day_usage = defaultdict(set)
 
-<<<<<<< HEAD
         practical_subjects = [subject for subject in subjects if subject["subject_type"] == "Practical"]
         theory_subjects = [subject for subject in subjects if subject["subject_type"] != "Practical"]
 
         for subject in practical_subjects:
-=======
-        practical_subjects = [subject for subject in subjects if subject.get("subject_type") == "Practical"]
-        theory_subjects = [subject for subject in subjects if subject.get("subject_type") != "Practical"]
-
-        # Schedule practicals first (most constrained)
-        for subject in practical_subjects:
-            # ENFORCE: Any lab should be done ONCE a week
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             self._schedule_practical_continuous_smart(
                 division_id,
                 subject,
                 entries,
                 slots_by_day,
                 student_count,
-<<<<<<< HEAD
                 requirements[subject["schedule_key"]],
-=======
-                1,  # required_sessions is now always 1 for labs
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                 scheduled_count,
                 subject_day_usage,
             )
 
-<<<<<<< HEAD
-=======
-        # Then schedule theory
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         for subject in theory_subjects:
             self._schedule_theory_continuous_smart(
                 division_id,
@@ -557,27 +379,15 @@ class TimetableGenerator:
         unscheduled = []
         for subject in subjects:
             schedule_key = subject["schedule_key"]
-<<<<<<< HEAD
             if scheduled_count[schedule_key] < requirements[schedule_key]:
                 unscheduled.append(
                     f"{subject['subject_code']} ({requirements[schedule_key] - scheduled_count[schedule_key]} left)"
-=======
-            # For practicals, we scheduled 1 session regardless of credits,
-            # but we want to check if it was actually scheduled.
-            is_practical = subject.get("subject_type") == "Practical"
-            target = 1 if is_practical else requirements[schedule_key]
-            
-            if scheduled_count[schedule_key] < target:
-                unscheduled.append(
-                    f"{subject['subject_code']} ({target - scheduled_count[schedule_key]} left)"
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                 )
 
         return entries, unscheduled
 
     def _schedule_theory_continuous_smart(
         self,
-<<<<<<< HEAD
         division_id: str,
         subject: Dict,
         entries: List[Dict],
@@ -586,16 +396,6 @@ class TimetableGenerator:
         required_lectures: int,
         scheduled_count: Dict,
         subject_day_usage: Dict,
-=======
-        division_id,
-        subject,
-        entries,
-        slots_by_day,
-        student_count,
-        required_lectures,
-        scheduled_count,
-        subject_day_usage,
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
     ):
         subject_code = subject["subject_code"]
         subject_key = subject["schedule_key"]
@@ -646,7 +446,6 @@ class TimetableGenerator:
 
     def _schedule_practical_continuous_smart(
         self,
-<<<<<<< HEAD
         division_id: str,
         subject: Dict,
         entries: List[Dict],
@@ -655,21 +454,10 @@ class TimetableGenerator:
         required_sessions: int,
         scheduled_count: Dict,
         subject_day_usage: Dict,
-=======
-        division_id,
-        subject,
-        entries,
-        slots_by_day,
-        student_count,
-        required_sessions,
-        scheduled_count,
-        subject_day_usage,
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
     ):
         subject_code = subject["subject_code"]
         subject_key = subject["schedule_key"]
         faculty_list = self._get_faculty_for_subject(subject_code)
-<<<<<<< HEAD
 
         if not faculty_list:
             raise ConstraintViolation(f"No faculty assigned for subject {subject_code}")
@@ -718,125 +506,17 @@ class TimetableGenerator:
                 if placed:
                     break
 
-=======
-        
-        if not faculty_list:
-            raise ConstraintViolation(f"No faculty assigned for subject {subject_code}")
-
-        # ENFORCE: 1 credit = 2 hours, and it's always one session
-        credits = subject.get("credits", 1)
-        practical_duration = credits * 2
-        
-        batch_size = subject.get("lab_batch_size") or student_count
-        
-        # Calculate number of batches needed
-        num_batches = (student_count + batch_size - 1) // batch_size
-
-        total_sessions_scheduled = 0
-        while total_sessions_scheduled < required_sessions:
-            placed = False
-            for day in self._get_balanced_day_order(division_id, list(slots_by_day.keys())):
-                # ENFORCE: Only one lab (practical) session per day for this division
-                if day in self.division_day_has_lab[division_id]:
-                    continue
-                
-                # Check if this subject already scheduled on this day
-                if (subject_code, "ALL") in subject_day_usage and day in subject_day_usage[(subject_code, "ALL")]:
-                    continue
-                
-                blocks = self._get_available_day_blocks(
-                    division_id, day, slots_by_day[day], practical_duration
-                )
-                
-                if not blocks:
-                    continue
-
-                for continuous_slots in blocks:
-                    slot_ids = [slot["slot_id"] for slot in continuous_slots]
-                    
-                    # ENFORCE: Find DISTINCT resources for ALL batches at the same time
-                    selected_resources = [] # list of (faculty, classroom)
-                    used_faculty_ids = set()
-                    used_room_ids = set()
-                    
-                    all_batches_possible = True
-                    for b_idx in range(num_batches):
-                        batch_label = f"B{b_idx + 1}" if num_batches > 1 else None
-                        
-                        # NEW: Use specific assigned faculty if available
-                        assigned_faculty = self._get_assigned_faculty(division_id, subject_code, batch_label)
-                        candidate_faculty = [assigned_faculty] if assigned_faculty else faculty_list
-                        
-                        faculty, classroom = self._select_practical_resources_with_excludes(
-                            candidate_faculty, division_id, day, slot_ids, batch_size, 
-                            used_faculty_ids, used_room_ids
-                        )
-                        if faculty and classroom:
-                            selected_resources.append((faculty, classroom))
-                            used_faculty_ids.add(faculty["faculty_id"])
-                            used_room_ids.add(classroom["classroom_id"])
-                        else:
-                            all_batches_possible = False
-                            break
-                    
-                    if not all_batches_possible:
-                        continue
-
-                    # If we got here, all batches can be scheduled in parallel!
-                    for b_idx, (faculty, classroom) in enumerate(selected_resources):
-                        batch_label = f"B{b_idx + 1}" if num_batches > 1 else None
-                        for slot in continuous_slots:
-                            self._assign_lecture(
-                                entries,
-                                division_id,
-                                day,
-                                slot["slot_id"],
-                                subject,
-                                faculty,
-                                classroom,
-                                "practical",
-                                batch_label,
-                            )
-                        self._mark_assignment(division_id, faculty, classroom, day, slot_ids)
-
-                    total_sessions_scheduled += 1
-                    scheduled_count[subject_key] += 1
-                    
-                    # Track usage for "One Lab Per Day" constraint
-                    self.division_day_has_lab[division_id].add(day)
-                    
-                    # Track usage per subject
-                    if (subject_code, "ALL") not in subject_day_usage:
-                        subject_day_usage[(subject_code, "ALL")] = set()
-                    subject_day_usage[(subject_code, "ALL")].add(day)
-                    
-                    placed = True
-                    break
-                    
-                if placed:
-                    break
-            
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             if not placed:
                 break
 
     def _select_theory_resources(
         self,
-<<<<<<< HEAD
         faculty_list: List[Dict],
         division_id: str,
         day: str,
         slot_id: str,
         student_count: int,
     ) -> Tuple[Optional[Dict], Optional[Dict]]:
-=======
-        faculty_list,
-        division_id,
-        day,
-        slot_id,
-        student_count,
-    ):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         for relax_preferences, relax_max_hours in ((False, False), (True, False), (True, True)):
             for faculty in sorted(faculty_list, key=lambda item: self.faculty_hours[item["faculty_id"]]):
                 if not self._check_theory_constraints(
@@ -856,7 +536,6 @@ class TimetableGenerator:
                     return faculty, classroom
 
         return None, None
-<<<<<<< HEAD
 
     def _select_practical_resources(
         self,
@@ -866,72 +545,6 @@ class TimetableGenerator:
         slot_ids: List[str],
         student_count: int,
     ) -> Tuple[Optional[Dict], Optional[Dict]]:
-=======
-    def _select_practical_resources_with_excludes(
-        self,
-        faculty_list,
-        division_id,
-        day,
-        slot_ids,
-        student_count,
-        exclude_faculty_ids,
-        exclude_room_ids,
-    ):
-        for relax_preferences, relax_max_hours in ((False, False), (True, False), (True, True)):
-            for faculty in sorted(faculty_list, key=lambda item: self.faculty_hours[item["faculty_id"]]):
-                if faculty["faculty_id"] in exclude_faculty_ids:
-                    continue
-                    
-                if not all(
-                    self._check_practical_constraints(
-                        faculty["faculty_id"],
-                        division_id,
-                        day,
-                        slot_id,
-                        faculty,
-                        relax_preferences=relax_preferences,
-                        relax_max_hours=relax_max_hours,
-                    )
-                    for slot_id in slot_ids
-                ):
-                    continue
-
-                classroom = self._find_practical_classroom_with_exclude(day, slot_ids, student_count, exclude_room_ids)
-                if classroom:
-                    return faculty, classroom
-
-        return None, None
-
-    def _find_practical_classroom_with_exclude(self, day, slot_ids, student_count, exclude_room_ids):
-        # Sort classrooms by capacity (prefer smaller ones that fit)
-        potential = [c for c in self.classrooms if c["room_type"] == "Practical" and c["classroom_id"] not in exclude_room_ids]
-        sorted_rooms = sorted(potential, key=lambda c: c["capacity"])
-
-        for room in sorted_rooms:
-            if room["capacity"] < student_count:
-                continue
-
-            # Check if room is available for all slots
-            is_available = True
-            for slot_id in slot_ids:
-                if (day, slot_id) in self.classroom_schedule[room["classroom_id"]]:
-                    is_available = False
-                    break
-            
-            if is_available:
-                return room
-        return None
-
-
-    def _select_practical_resources(
-        self,
-        faculty_list,
-        division_id,
-        day,
-        slot_ids,
-        student_count,
-    ):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         for relax_preferences, relax_max_hours in ((False, False), (True, False), (True, True)):
             for faculty in sorted(faculty_list, key=lambda item: self.faculty_hours[item["faculty_id"]]):
                 if not all(
@@ -954,11 +567,7 @@ class TimetableGenerator:
 
         return None, None
 
-<<<<<<< HEAD
     def _mark_assignment(self, division_id: str, faculty: Dict, classroom: Dict, day: str, slot_ids: List[str]):
-=======
-    def _mark_assignment(self, division_id, faculty, classroom, day, slot_ids):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         faculty_id = faculty["faculty_id"]
         classroom_id = classroom["classroom_id"]
 
@@ -971,44 +580,25 @@ class TimetableGenerator:
 
     def _get_balanced_day_order(
         self,
-<<<<<<< HEAD
         division_id: str,
         days: List[str],
     ) -> List[str]:
         def day_score(day: str) -> int:
-=======
-        division_id,
-        days,
-    ):
-        def day_score(day):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             return len(self.daily_slot_usage[division_id][day])
 
         return sorted(days, key=day_score)
 
-<<<<<<< HEAD
     def _get_available_candidate_slots(self, division_id: str, day: str, day_slots: List[Dict]) -> List[Dict]:
-=======
-    def _get_available_candidate_slots(self, division_id, day, day_slots):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         used_slot_ids = self.daily_slot_usage[division_id][day]
         return [slot for slot in day_slots if slot["slot_id"] not in used_slot_ids]
 
     def _get_available_day_blocks(
         self,
-<<<<<<< HEAD
         division_id: str,
         day: str,
         day_slots: List[Dict],
         block_size: int,
     ) -> List[List[Dict]]:
-=======
-        division_id,
-        day,
-        day_slots,
-        block_size,
-    ):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         used_slot_ids = self.daily_slot_usage[division_id][day]
         candidates = []
         for start_index in range(0, len(day_slots) - block_size + 1):
@@ -1022,7 +612,6 @@ class TimetableGenerator:
 
     def _check_theory_constraints(
         self,
-<<<<<<< HEAD
         faculty_id: str,
         division_id: str,
         day: str,
@@ -1032,17 +621,6 @@ class TimetableGenerator:
         relax_preferences: bool = False,
         relax_max_hours: bool = False,
     ) -> bool:
-=======
-        faculty_id,
-        division_id,
-        day,
-        slot_id,
-        student_count,
-        faculty,
-        relax_preferences=False,
-        relax_max_hours=False,
-    ):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         if (day, slot_id) in self.faculty_schedule[faculty_id]:
             return False
 
@@ -1057,13 +635,7 @@ class TimetableGenerator:
         if not relax_preferences and preferred_time != "any":
             slot = self._get_slot_by_id(slot_id)
             if slot:
-<<<<<<< HEAD
                 hour = int(slot["start_time"].split(":")[0])
-=======
-                # Handle HH:MM string comparison
-                hour_str = slot["start_time"].split(":")[0]
-                hour = int(hour_str)
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                 if preferred_time == "morning" and hour >= 13:
                     return False
                 if preferred_time == "afternoon" and hour < 13:
@@ -1077,7 +649,6 @@ class TimetableGenerator:
 
     def _check_practical_constraints(
         self,
-<<<<<<< HEAD
         faculty_id: str,
         division_id: str,
         day: str,
@@ -1086,43 +657,21 @@ class TimetableGenerator:
         relax_preferences: bool = False,
         relax_max_hours: bool = False,
     ) -> bool:
-=======
-        faculty_id,
-        division_id,
-        day,
-        slot_id,
-        faculty,
-        relax_preferences=False,
-        relax_max_hours=False,
-    ):
-        # Practicals don't check student_count here as it's batch-based
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         return self._check_theory_constraints(
             faculty_id,
             division_id,
             day,
             slot_id,
-<<<<<<< HEAD
             0,
-=======
-            0, # dummy count
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             faculty,
             relax_preferences=relax_preferences,
             relax_max_hours=relax_max_hours,
         )
 
-<<<<<<< HEAD
     def _find_theory_classroom(self, day: str, slot_id: str, student_count: int) -> Optional[Dict]:
         theory_rooms = [room for room in self.classrooms if room["room_type"] == "Theory"]
         suitable_rooms = [room for room in theory_rooms if room["capacity"] >= student_count]
         suitable_rooms.sort(key=lambda room: room["capacity"])
-=======
-    def _find_theory_classroom(self, day, slot_id, student_count):
-        theory_rooms = [room for room in self.classrooms if room.get("room_type") == "Theory"]
-        suitable_rooms = [room for room in theory_rooms if room.get("capacity", 0) >= student_count]
-        suitable_rooms.sort(key=lambda room: room.get("capacity", 0))
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
 
         for room in suitable_rooms:
             if (day, slot_id) not in self.classroom_schedule[room["classroom_id"]]:
@@ -1130,7 +679,6 @@ class TimetableGenerator:
 
         return None
 
-<<<<<<< HEAD
     def _find_practical_classroom(
         self,
         day: str,
@@ -1140,12 +688,6 @@ class TimetableGenerator:
         practical_rooms = [room for room in self.classrooms if room["room_type"] == "Practical"]
         suitable_rooms = [room for room in practical_rooms if room["capacity"] >= student_count]
         suitable_rooms.sort(key=lambda room: room["capacity"])
-=======
-    def _find_practical_classroom(self, day, slot_ids, student_count):
-        practical_rooms = [room for room in self.classrooms if room.get("room_type") == "Practical"]
-        suitable_rooms = [room for room in practical_rooms if room.get("capacity", 0) >= student_count]
-        suitable_rooms.sort(key=lambda room: room.get("capacity", 0))
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
 
         for room in suitable_rooms:
             if all((day, slot_id) not in self.classroom_schedule[room["classroom_id"]] for slot_id in slot_ids):
@@ -1155,7 +697,6 @@ class TimetableGenerator:
 
     def _assign_lecture(
         self,
-<<<<<<< HEAD
         entries: List[Dict],
         division_id: str,
         day: str,
@@ -1168,32 +709,6 @@ class TimetableGenerator:
     ):
         for entry in entries:
             if entry["day"] == day and entry["slot_id"] == slot_id:
-=======
-        entries,
-        division_id,
-        day,
-        slot_id,
-        subject,
-        faculty,
-        classroom,
-        entry_type,
-        batch=None,
-    ):
-        for entry in entries:
-            if entry["day"] == day and entry["slot_id"] == slot_id:
-                # If it's the same subject (parallel batch), combine batch labels
-                if entry.get("subject_code") == subject["subject_code"] and batch:
-                    existing_batch = entry.get("batch")
-                    if existing_batch and batch not in existing_batch:
-                        entry["batch"] = f"{existing_batch}, {batch}"
-                    elif not existing_batch:
-                        entry["batch"] = batch
-                    # Also record multiple faculty/rooms? 
-                    # Usually for student view, we just show the subject and batches.
-                    return
-
-                # Otherwise, overwrite (shouldn't happen for students unless conflict)
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
                 entry["subject_code"] = subject["subject_code"]
                 entry["subject_name"] = subject["subject_name"]
                 entry["faculty_id"] = faculty["faculty_id"]
@@ -1202,11 +717,7 @@ class TimetableGenerator:
                 entry["entry_type"] = entry_type
                 if batch:
                     entry["batch"] = batch
-<<<<<<< HEAD
                 break
-=======
-                return
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
 
         detail_entry = {
             "day": day,
@@ -1227,11 +738,7 @@ class TimetableGenerator:
             self.classroom_entry_details[classroom["classroom_id"]], day, slot_id, detail_entry
         )
 
-<<<<<<< HEAD
     def _store_entity_entry(self, entity_entries: Dict, day: str, slot_id: str, detail_entry: Dict):
-=======
-    def _store_entity_entry(self, entity_entries, day, slot_id, detail_entry):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         key = (day, slot_id)
         existing_entry = entity_entries.get(key)
 
@@ -1246,11 +753,7 @@ class TimetableGenerator:
         elif not existing_batch and new_batch:
             existing_entry["batch"] = new_batch
 
-<<<<<<< HEAD
     def _get_faculty_for_subject(self, subject_code: str) -> List[Dict]:
-=======
-    def _get_faculty_for_subject(self, subject_code):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         exact_match = [faculty for faculty in self.faculty if subject_code in faculty.get("subjects", [])]
         if exact_match:
             return exact_match
@@ -1262,103 +765,30 @@ class TimetableGenerator:
             if any(code in faculty.get("subjects", []) for code in fallback_codes)
         ]
 
-<<<<<<< HEAD
     def _subject_code_fallbacks(self, subject_code: str) -> List[str]:
-=======
-    def _get_assigned_faculty(self, division_id, subject_code, batch_label=None):
-        """
-        Returns the specific faculty member assigned to this division/subject/batch
-        from the faculty_assignments collection.
-        """
-        # division_id is e.g. "CSE_UG_SEM1_A"
-        # In faculty_assignments, division is "A", semester is 1, course_id is "CSE_UG"
-        parts = division_id.split("_SEM")
-        if len(parts) < 2:
-            return None
-        course_id = parts[0]
-        sem_div = parts[1].split("_")
-        if len(sem_div) < 2:
-            semester_raw = parts[1]
-            # Try splitting by just "_" if _SEM wasn't followed by a number immediately?
-            # Actually f"{course_id}_SEM{semester}" is the pattern.
-            return None
-        
-        try:
-            semester = int(sem_div[0])
-            division = sem_div[1]
-        except:
-            return None
-        
-        for a in self.faculty_assignments:
-            if (a["course_id"] == course_id and 
-                a["semester"] == semester and 
-                a["division"] == division and 
-                a["subject_id"] == subject_code and
-                a.get("batch") == batch_label):
-                
-                # Find the faculty object
-                for f in self.faculty:
-                    if f["faculty_id"] == a["faculty_id"]:
-                        return f
-        return None
-
-    def _subject_code_fallbacks(self, subject_code):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         if subject_code.endswith("P"):
             return [subject_code[:-1] + "T"]
         if subject_code.endswith("T"):
             return [subject_code[:-1] + "P"]
         return []
 
-<<<<<<< HEAD
     def _get_slot_by_id(self, slot_id: str) -> Optional[Dict]:
-=======
-    def _get_slot_by_id(self, slot_id):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         for slot in self.timing_config.get("time_slots", []):
             if slot["slot_id"] == slot_id:
                 return slot
         return None
 
-<<<<<<< HEAD
     def _are_slots_continuous(self, slots: List[Dict]) -> bool:
-=======
-    def _are_slots_continuous(self, slots):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         if len(slots) <= 1:
             return True
 
         sorted_slots = sorted(slots, key=lambda slot: slot["start_time"])
         for index in range(len(sorted_slots) - 1):
-<<<<<<< HEAD
             if sorted_slots[index]["end_time"] != sorted_slots[index + 1]["start_time"]:
                 return False
         return True
 
     def _generate_faculty_timetable(self, faculty_id: str) -> Dict:
-=======
-            s1_end = sorted_slots[index]["end_time"]
-            s2_start = sorted_slots[index + 1]["start_time"]
-            
-            # Lenient check: Allow exact match OR 1-minute buffer
-            if s1_end == s2_start:
-                continue
-            
-            try:
-                h1, m1 = map(int, s1_end.split(":"))
-                h2, m2 = map(int, s2_start.split(":"))
-                t1 = h1 * 60 + m1
-                t2 = h2 * 60 + m2
-                if 0 < (t2 - t1) <= 2: # Allow up to 2 min gap
-                    continue
-            except:
-                pass
-                
-            return False
-        return True
-
-    def _generate_faculty_timetable(self, faculty_id):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         entries = []
         working_days = self.timing_config["working_days"]
         time_slots = self.timing_config["time_slots"]
@@ -1384,11 +814,7 @@ class TimetableGenerator:
             "version": 1,
         }
 
-<<<<<<< HEAD
     def _generate_classroom_timetable(self, classroom_id: str) -> Dict:
-=======
-    def _generate_classroom_timetable(self, classroom_id):
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         entries = []
         working_days = self.timing_config["working_days"]
         time_slots = self.timing_config["time_slots"]
@@ -1409,17 +835,12 @@ class TimetableGenerator:
             "entity_type": "classroom",
             "entity_id": classroom_id,
             "classroom_name": classroom_id,
-<<<<<<< HEAD
             "capacity": classroom_info["capacity"] if classroom_info else 0,
-=======
-            "capacity": classroom_info.get("capacity", 0) if classroom_info else 0,
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
             "entries": entries,
             "generated_at": datetime.utcnow().isoformat(),
             "version": 1,
         }
 
-<<<<<<< HEAD
     async def _save_timetables(self, timetables: List[Dict]):
         if not timetables:
             return
@@ -1427,15 +848,4 @@ class TimetableGenerator:
         await self.db.timetables.delete_many({})
         await self.db.timetables.insert_many(timetables)
 
-=======
-    def _save_timetables(self, timetables):
-        if not timetables:
-            return
-
-        # PyMongo mutates inserted documents by injecting ObjectId.
-        # Save a deep copy so API response data stays JSON-serializable.
-        timetables_to_persist = copy.deepcopy(timetables)
-        self.db.timetables.delete_many({})
-        self.db.timetables.insert_many(timetables_to_persist)
->>>>>>> 8097805898c56c10c66165019ea8f0cbe9433296
         print(f"Saved {len(timetables)} timetables to database")
