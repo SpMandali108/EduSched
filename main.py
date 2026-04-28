@@ -21,7 +21,7 @@ from website.routes import (
 )
 
 MONGO_URI = os.getenv("MONGO_URI", os.getenv("MONGODB_URL", "mongodb://localhost:27017"))
-DATABASE_NAME = "university_timetable_pro"
+DATABASE_NAME = os.getenv("MONGO_DB_NAME", "edusched")
 
 db_client = None
 database = None
