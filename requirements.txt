@@ -1,4 +1,16 @@
-flask
-pymongo
-python-dotenv
-pandas
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Database
+motor==3.3.2
+pymongo==4.6.0
+
+# Data validation
+pydantic==2.5.0
+
+# File handling / forms
+python-multipart==0.0.6
+
+# Reports / export
+reportlab==4.0.7
+openpyxl==3.1.2
