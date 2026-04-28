@@ -365,6 +365,8 @@ async def load_sample_data():
     
     client.close()
 
+def load_assignment_data():
+    return []
 
 if __name__ == "__main__":
     asyncio.run(load_sample_data())
