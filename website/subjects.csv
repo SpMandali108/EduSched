@@ -1,0 +1,221 @@
+subject_id,subject_name,branch,type,credits,sem
+CSE201T,Programming in Python,CSE_UG,Theory,3,2
+CSE202T,Data Structures,CSE_UG,Theory,4,2
+CSE203T,Discrete Mathematics,CSE_UG,Theory,3,2
+CSE204T,DBMS,CSE_UG,Theory,3,2
+CSE205T,Operating Systems,CSE_UG,Theory,2,2
+CSE201P,Programming in Python Lab,CSE_UG,Practical,1,2
+CSE202P,Data Structures Lab,CSE_UG,Practical,1,2
+CSE203P,Discrete Mathematics Lab,CSE_UG,Practical,1,2
+CSE401T,Programming in Python,CSE_UG,Theory,4,4
+CSE402T,Data Structures,CSE_UG,Theory,3,4
+CSE403T,Discrete Mathematics,CSE_UG,Theory,3,4
+CSE404T,DBMS,CSE_UG,Theory,2,4
+CSE405T,Operating Systems,CSE_UG,Theory,3,4
+CSE401P,Programming in Python Lab,CSE_UG,Practical,1,4
+CSE402P,Data Structures Lab,CSE_UG,Practical,1,4
+CSE403P,Discrete Mathematics Lab,CSE_UG,Practical,1,4
+CSE601T,Programming in Python,CSE_PG,Theory,3,6
+CSE602T,Data Structures,CSE_PG,Theory,3,6
+CSE603T,Discrete Mathematics,CSE_PG,Theory,2,6
+CSE604T,DBMS,CSE_PG,Theory,3,6
+CSE605T,Operating Systems,CSE_UG,Theory,4,6
+CSE601P,Programming in Python Lab,CSE_PG,Practical,1,6
+CSE602P,Data Structures Lab,CSE_PG,Practical,1,6
+CSE603P,Discrete Mathematics Lab,CSE_UG,Practical,1,6
+CSE801T,Programming in Python,CSE_PG,Theory,3,8
+CSE802T,Data Structures,CSE_PG,Theory,2,8
+CSE803T,Discrete Mathematics,CSE_PG,Theory,3,8
+CSE804T,DBMS,CSE_PG,Theory,4,8
+CSE805T,Operating Systems,CSE_UG,Theory,3,8
+CSE801P,Programming in Python Lab,CSE_PG,Practical,1,8
+CSE802P,Data Structures Lab,CSE_PG,Practical,1,8
+CSE803P,Discrete Mathematics Lab,CSE_UG,Practical,1,8
+CSE601T,Advanced Algorithms,CSE_PG,Theory,3,6
+CSE602T,Machine Learning,CSE_PG,Theory,3,6
+CSE603T,Distributed Systems,CSE_PG,Theory,2,6
+CSE604T,Advanced DBMS,CSE_PG,Theory,3,6
+CSE601P,Advanced Algorithms Lab,CSE_PG,Practical,1,6
+CSE602P,Machine Learning Lab,CSE_PG,Practical,1,6
+CSE801T,Advanced Algorithms,CSE_PG,Theory,2,8
+CSE802T,Machine Learning,CSE_PG,Theory,3,8
+CSE803T,Distributed Systems,CSE_PG,Theory,4,8
+CSE804T,Advanced DBMS,CSE_PG,Theory,3,8
+CSE801P,Advanced Algorithms Lab,CSE_PG,Practical,1,8
+CSE802P,Machine Learning Lab,CSE_PG,Practical,1,8
+ECE201T,Basic Electronics,ECE_UG,Theory,3,2
+ECE202T,Circuit Theory,ECE_UG,Theory,2,2
+ECE203T,Digital Logic,ECE_UG,Theory,3,2
+ECE204T,Signals and Systems,ECE_UG,Theory,4,2
+ECE205T,Microprocessors,ECE_UG,Theory,3,2
+ECE201P,Basic Electronics Lab,ECE_UG,Practical,1,2
+ECE202P,Circuit Theory Lab,ECE_UG,Practical,1,2
+ECE203P,Digital Logic Lab,ECE_UG,Practical,1,2
+ECE401T,Basic Electronics,ECE_UG,Theory,2,4
+ECE402T,Circuit Theory,ECE_UG,Theory,3,4
+ECE403T,Digital Logic,ECE_UG,Theory,4,4
+ECE404T,Signals and Systems,ECE_UG,Theory,3,4
+ECE405T,Microprocessors,ECE_UG,Theory,3,4
+ECE401P,Basic Electronics Lab,ECE_UG,Practical,1,4
+ECE402P,Circuit Theory Lab,ECE_UG,Practical,1,4
+ECE403P,Digital Logic Lab,ECE_UG,Practical,1,4
+ECE601T,Basic Electronics,ECE_PG,Theory,3,6
+ECE602T,Circuit Theory,ECE_PG,Theory,4,6
+ECE603T,Digital Logic,ECE_PG,Theory,3,6
+ECE604T,Signals and Systems,ECE_PG,Theory,3,6
+ECE605T,Microprocessors,ECE_UG,Theory,2,6
+ECE601P,Basic Electronics Lab,ECE_PG,Practical,1,6
+ECE602P,Circuit Theory Lab,ECE_PG,Practical,1,6
+ECE603P,Digital Logic Lab,ECE_UG,Practical,1,6
+ECE801T,Basic Electronics,ECE_PG,Theory,4,8
+ECE802T,Circuit Theory,ECE_PG,Theory,3,8
+ECE803T,Digital Logic,ECE_PG,Theory,3,8
+ECE804T,Signals and Systems,ECE_PG,Theory,2,8
+ECE805T,Microprocessors,ECE_UG,Theory,3,8
+ECE801P,Basic Electronics Lab,ECE_PG,Practical,1,8
+ECE802P,Circuit Theory Lab,ECE_PG,Practical,1,8
+ECE803P,Digital Logic Lab,ECE_UG,Practical,1,8
+ECE601T,Advanced VLSI,ECE_PG,Theory,3,6
+ECE602T,Digital Signal Processing,ECE_PG,Theory,4,6
+ECE603T,Wireless Communication,ECE_PG,Theory,3,6
+ECE604T,Embedded AI,ECE_PG,Theory,3,6
+ECE601P,Advanced VLSI Lab,ECE_PG,Practical,1,6
+ECE602P,Digital Signal Processing Lab,ECE_PG,Practical,1,6
+ECE801T,Advanced VLSI,ECE_PG,Theory,3,8
+ECE802T,Digital Signal Processing,ECE_PG,Theory,3,8
+ECE803T,Wireless Communication,ECE_PG,Theory,2,8
+ECE804T,Embedded AI,ECE_PG,Theory,3,8
+ECE801P,Advanced VLSI Lab,ECE_PG,Practical,1,8
+ECE802P,Digital Signal Processing Lab,ECE_PG,Practical,1,8
+ME201T,Engineering Mechanics,ME_UG,Theory,4,2
+ME202T,Thermodynamics,ME_UG,Theory,3,2
+ME203T,Fluid Mechanics,ME_UG,Theory,3,2
+ME204T,Manufacturing Process,ME_UG,Theory,2,2
+ME205T,Heat Transfer,ME_UG,Theory,3,2
+ME201P,Engineering Mechanics Lab,ME_UG,Practical,1,2
+ME202P,Thermodynamics Lab,ME_UG,Practical,1,2
+ME203P,Fluid Mechanics Lab,ME_UG,Practical,1,2
+ME401T,Engineering Mechanics,ME_UG,Theory,3,4
+ME402T,Thermodynamics,ME_UG,Theory,3,4
+ME403T,Fluid Mechanics,ME_UG,Theory,2,4
+ME404T,Manufacturing Process,ME_UG,Theory,3,4
+ME405T,Heat Transfer,ME_UG,Theory,4,4
+ME401P,Engineering Mechanics Lab,ME_UG,Practical,1,4
+ME402P,Thermodynamics Lab,ME_UG,Practical,1,4
+ME403P,Fluid Mechanics Lab,ME_UG,Practical,1,4
+ME601T,Engineering Mechanics,ME_PG,Theory,3,6
+ME602T,Thermodynamics,ME_PG,Theory,2,6
+ME603T,Fluid Mechanics,ME_PG,Theory,3,6
+ME604T,Manufacturing Process,ME_PG,Theory,4,6
+ME605T,Heat Transfer,ME_UG,Theory,3,6
+ME601P,Engineering Mechanics Lab,ME_PG,Practical,1,6
+ME602P,Thermodynamics Lab,ME_PG,Practical,1,6
+ME603P,Fluid Mechanics Lab,ME_UG,Practical,1,6
+ME801T,Engineering Mechanics,ME_PG,Theory,2,8
+ME802T,Thermodynamics,ME_PG,Theory,3,8
+ME803T,Fluid Mechanics,ME_PG,Theory,4,8
+ME804T,Manufacturing Process,ME_PG,Theory,3,8
+ME805T,Heat Transfer,ME_UG,Theory,3,8
+ME801P,Engineering Mechanics Lab,ME_PG,Practical,1,8
+ME802P,Thermodynamics Lab,ME_PG,Practical,1,8
+ME803P,Fluid Mechanics Lab,ME_UG,Practical,1,8
+ME601T,Advanced Thermodynamics,ME_PG,Theory,3,6
+ME602T,Computational Fluid Dynamics,ME_PG,Theory,2,6
+ME603T,Advanced Robotics,ME_PG,Theory,3,6
+ME604T,Smart Manufacturing,ME_PG,Theory,4,6
+ME601P,Advanced Thermodynamics Lab,ME_PG,Practical,1,6
+ME602P,Computational Fluid Dynamics Lab,ME_PG,Practical,1,6
+ME801T,Advanced Thermodynamics,ME_PG,Theory,3,8
+ME802T,Computational Fluid Dynamics,ME_PG,Theory,4,8
+ME803T,Advanced Robotics,ME_PG,Theory,3,8
+ME804T,Smart Manufacturing,ME_PG,Theory,3,8
+ME801P,Advanced Thermodynamics Lab,ME_PG,Practical,1,8
+ME802P,Computational Fluid Dynamics Lab,ME_PG,Practical,1,8
+BIO201T,Cell Biology,BIO_UG,Theory,2,2
+BIO202T,Genetics,BIO_UG,Theory,3,2
+BIO203T,Biochemistry,BIO_UG,Theory,4,2
+BIO204T,Microbiology,BIO_UG,Theory,3,2
+BIO205T,Immunology,BIO_UG,Theory,3,2
+BIO201P,Cell Biology Lab,BIO_UG,Practical,1,2
+BIO202P,Genetics Lab,BIO_UG,Practical,1,2
+BIO203P,Biochemistry Lab,BIO_UG,Practical,1,2
+BIO401T,Cell Biology,BIO_UG,Theory,3,4
+BIO402T,Genetics,BIO_UG,Theory,4,4
+BIO403T,Biochemistry,BIO_UG,Theory,3,4
+BIO404T,Microbiology,BIO_UG,Theory,3,4
+BIO405T,Immunology,BIO_UG,Theory,2,4
+BIO401P,Cell Biology Lab,BIO_UG,Practical,1,4
+BIO402P,Genetics Lab,BIO_UG,Practical,1,4
+BIO403P,Biochemistry Lab,BIO_UG,Practical,1,4
+BIO601T,Cell Biology,BIO_PG,Theory,4,6
+BIO602T,Genetics,BIO_PG,Theory,3,6
+BIO603T,Biochemistry,BIO_PG,Theory,3,6
+BIO604T,Microbiology,BIO_PG,Theory,2,6
+BIO605T,Immunology,BIO_UG,Theory,3,6
+BIO601P,Cell Biology Lab,BIO_PG,Practical,1,6
+BIO602P,Genetics Lab,BIO_PG,Practical,1,6
+BIO603P,Biochemistry Lab,BIO_UG,Practical,1,6
+BIO801T,Cell Biology,BIO_PG,Theory,3,8
+BIO802T,Genetics,BIO_PG,Theory,3,8
+BIO803T,Biochemistry,BIO_PG,Theory,2,8
+BIO804T,Microbiology,BIO_PG,Theory,3,8
+BIO805T,Immunology,BIO_UG,Theory,4,8
+BIO801P,Cell Biology Lab,BIO_PG,Practical,1,8
+BIO802P,Genetics Lab,BIO_PG,Practical,1,8
+BIO803P,Biochemistry Lab,BIO_UG,Practical,1,8
+BIO601T,Genomics,BIO_PG,Theory,4,6
+BIO602T,Proteomics,BIO_PG,Theory,3,6
+BIO603T,Advanced Bioinformatics,BIO_PG,Theory,3,6
+BIO604T,Biostatistics,BIO_PG,Theory,2,6
+BIO601P,Genomics Lab,BIO_PG,Practical,1,6
+BIO602P,Proteomics Lab,BIO_PG,Practical,1,6
+BIO801T,Genomics,BIO_PG,Theory,3,8
+BIO802T,Proteomics,BIO_PG,Theory,2,8
+BIO803T,Advanced Bioinformatics,BIO_PG,Theory,3,8
+BIO804T,Biostatistics,BIO_PG,Theory,4,8
+BIO801P,Genomics Lab,BIO_PG,Practical,1,8
+BIO802P,Proteomics Lab,BIO_PG,Practical,1,8
+MGT201T,Principles of Management,MGT_UG,Theory,3,2
+MGT202T,Accounting,MGT_UG,Theory,3,2
+MGT203T,Marketing,MGT_UG,Theory,2,2
+MGT204T,Business Economics,MGT_UG,Theory,3,2
+MGT205T,Finance,MGT_UG,Theory,4,2
+MGT201P,Principles of Management Lab,MGT_UG,Practical,1,2
+MGT202P,Accounting Lab,MGT_UG,Practical,1,2
+MGT203P,Marketing Lab,MGT_UG,Practical,1,2
+MGT401T,Principles of Management,MGT_UG,Theory,3,4
+MGT402T,Accounting,MGT_UG,Theory,2,4
+MGT403T,Marketing,MGT_UG,Theory,3,4
+MGT404T,Business Economics,MGT_UG,Theory,4,4
+MGT405T,Finance,MGT_UG,Theory,3,4
+MGT401P,Principles of Management Lab,MGT_UG,Practical,1,4
+MGT402P,Accounting Lab,MGT_UG,Practical,1,4
+MGT403P,Marketing Lab,MGT_UG,Practical,1,4
+MGT601T,Principles of Management,MGT_PG,Theory,2,6
+MGT602T,Accounting,MGT_PG,Theory,3,6
+MGT603T,Marketing,MGT_PG,Theory,4,6
+MGT604T,Business Economics,MGT_PG,Theory,3,6
+MGT605T,Finance,MGT_UG,Theory,3,6
+MGT601P,Principles of Management Lab,MGT_PG,Practical,1,6
+MGT602P,Accounting Lab,MGT_PG,Practical,1,6
+MGT603P,Marketing Lab,MGT_UG,Practical,1,6
+MGT801T,Principles of Management,MGT_PG,Theory,3,8
+MGT802T,Accounting,MGT_PG,Theory,4,8
+MGT803T,Marketing,MGT_PG,Theory,3,8
+MGT804T,Business Economics,MGT_PG,Theory,3,8
+MGT805T,Finance,MGT_UG,Theory,2,8
+MGT801P,Principles of Management Lab,MGT_PG,Practical,1,8
+MGT802P,Accounting Lab,MGT_PG,Practical,1,8
+MGT803P,Marketing Lab,MGT_UG,Practical,1,8
+MGT601T,Strategic Management,MGT_PG,Theory,2,6
+MGT602T,Advanced Finance,MGT_PG,Theory,3,6
+MGT603T,Business Analytics,MGT_PG,Theory,4,6
+MGT604T,Leadership,MGT_PG,Theory,3,6
+MGT601P,Strategic Management Lab,MGT_PG,Practical,1,6
+MGT602P,Advanced Finance Lab,MGT_PG,Practical,1,6
+MGT801T,Strategic Management,MGT_PG,Theory,4,8
+MGT802T,Advanced Finance,MGT_PG,Theory,3,8
+MGT803T,Business Analytics,MGT_PG,Theory,3,8
+MGT804T,Leadership,MGT_PG,Theory,2,8
+MGT801P,Strategic Management Lab,MGT_PG,Practical,1,8
+MGT802P,Advanced Finance Lab,MGT_PG,Practical,1,8
