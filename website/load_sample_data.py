@@ -7,8 +7,11 @@ import asyncio
 import csv
 from motor.motor_asyncio import AsyncIOMotorClient
 from pathlib import Path
+import os
 
-MONGODB_URL = "mongodb://localhost:27017"
+load_dotenv = True
+
+MONGODB_URL = os.getenv("MONGO_URI")
 DATABASE_NAME = "university_timetable_pro"
 
 # CSV file paths (relative to this script)
