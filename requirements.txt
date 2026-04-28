@@ -15,3 +15,4 @@ python-multipart==0.0.6
 reportlab==4.0.7
 openpyxl==3.1.2
 gunicorn==21.2.0
+flask==3.0.3
