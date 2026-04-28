@@ -14,3 +14,4 @@ python-multipart==0.0.6
 # Reports / export
 reportlab==4.0.7
 openpyxl==3.1.2
+gunicorn==21.2.0
