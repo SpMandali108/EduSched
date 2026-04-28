@@ -488,7 +488,7 @@ def _create_zip_buffer(files_dict: dict) -> io.BytesIO:
 @load_data_router.get("/sample")
 async def download_sample_data():
     """Download a ZIP containing all 4 sample CSV files"""
-    script_dir = Path(__file__).parent
+    script_dir = Path(__file__).parent / "templates"
     files_dict = {}
     for key, filename in CSV_FILE_MAP.items():
         filepath = script_dir / filename
@@ -747,7 +747,7 @@ async def upload_csv_files(
 async def load_sample_data_from_csv(request: Request):
     """Load sample data from existing CSV files into MongoDB (same as load_sample_data.py)"""
     db = request.app.state.db
-    script_dir = Path(__file__).parent
+    script_dir = Path(__file__).parent / "templates"
 
     # Clear existing data
     await db.classrooms.delete_many({})
